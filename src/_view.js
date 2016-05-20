@@ -31,7 +31,7 @@ var View = UI.extend({
         var styleEl = modification.create('style');
         var viewsEl = app.getViewsElement();
 
-        the.Super();
+        View.parent(the);
         the.app = app;
         the.options = options;
         the.route = route;
@@ -265,7 +265,7 @@ var View = UI.extend({
                 = the.styleEl = the.route
                 = the.controller = the.route.view
                 = null;
-            the.Super.destroy();
+            View.parent.destroy(the);
         };
 
         var destroy = fun.noop(controller.destroy);

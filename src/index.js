@@ -54,7 +54,7 @@ define(function (require, exports, module) {
 
             the.router = router;
             the[_options] = options = object.assign(true, {}, defaults, options);
-            the.Super(options);
+            Application.parent(the, options);
             the[_viewsList] = [];
             the[_viewsIdMap] = {};
             the[_routersIdMap] = {};
