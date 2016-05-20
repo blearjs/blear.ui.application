@@ -13,14 +13,14 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var UI = require('../index.js');
-    var object = require('../../utils/object.js');
-    var typeis = require('../../utils/typeis.js');
-    var selector = require('../../core/selector.js');
-    var attribute = require('../../core/attribute.js');
-    var modification = require('../../core/modification.js');
-    var htmlViews = require('./views.html', 'html');
-    var View = require('./_view.js');
+    var UI =           require('blear.ui');
+    var object =       require('blear.utils.object');
+    var typeis =       require('blear.utils.typeis');
+    var selector =     require('blear.core.selector');
+    var attribute =    require('blear.core.attribute');
+    var modification = require('blear.core.modification');
+    var htmlViews =    require('./views.html', 'html');
+    var View =         require('./_view.js');
 
     var namespace = UI.UI_CLASS + '-application';
     var win = window;
