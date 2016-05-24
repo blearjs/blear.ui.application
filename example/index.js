@@ -12,6 +12,8 @@ define(function (require, exports, module) {
 
     'use strict';
 
+    console.timeEnd('模块加载时间');
+
     var Application = require('../src/index.js');
     var Loading = require('blear.ui.loading');
     var UI = require('blear.ui');
