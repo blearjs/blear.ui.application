@@ -48,7 +48,7 @@ var View = UI.extend({
         viewEl.id = namespace + '-' + route.id + '-' + (viewId++);
         styleEl.id = namespace + '-' + route.id + '-' + (viewId++);
         the.viewEl = modification.insert(viewEl, viewsEl);
-        the.viewInnerEl = selector.children(viewEl)[0];
+        the.el = selector.children(viewEl)[0];
         the.styleEl = modification.insert(styleEl, viewsEl);
         the.visible = false;
         the.decorated = false;
@@ -71,7 +71,7 @@ var View = UI.extend({
             return;
         }
 
-        morphDom(the.viewInnerEl, '<div>' + html + '</div>', {
+        morphDom(the.el, '<div>' + html + '</div>', {
             childrenOnly: true
         });
 
@@ -298,7 +298,6 @@ var View = UI.extend({
 });
 var _getViewOptions = View.sole();
 var _changeDocumentTitle = View.sole();
-var _faciconIframe = View.sole();
 
 
 /**
