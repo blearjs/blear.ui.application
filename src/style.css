@@ -1,8 +1,8 @@
-.dkui-application-overflow {
+.blearui-application-overflow {
   height: 100%; }
 
-.dkui-application-views,
-.dkui-application-view {
+.blearui-application-views,
+.blearui-application-view {
   position: absolute;
   top: 0;
   left: 0;
@@ -10,7 +10,7 @@
   height: 100%;
   overflow: hidden; }
 
-.dkui-application-view {
+.blearui-application-view {
   background: #fff;
   overflow: auto;
   -webkit-overflow-scrolling: touch; }
