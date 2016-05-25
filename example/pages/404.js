@@ -12,4 +12,5 @@ define(function (require, exports, module) {
     exports.leave = function (app, route) {
         console.log('<404>', '[leave]', route);
     };
+    exports.title = '404';
 });

@@ -8,12 +8,12 @@
 
 'use strict';
 
-var UI =           require('blear.ui');
+var UI = require('blear.ui');
 var modification = require('blear.core.modification');
-var selector =     require('blear.core.selector');
-var morphDom =     require('blear.shims.morphdom');
-var fun =          require('blear.utils.function');
-var htmlView =     require('./view.html', 'html');
+var selector = require('blear.core.selector');
+var morphDom = require('blear.shims.morphdom');
+var fun = require('blear.utils.function');
+var htmlView = require('./view.html', 'html');
 
 
 var namespace = UI.UI_CLASS + '-application';
@@ -21,6 +21,13 @@ var viewId = 0;
 var win = window;
 var doc = win.document;
 var docTitle = doc.title;
+var FAVICON = '/favicon.ico?';
+var faviconIframe = modification.create('iframe', {
+    style: {
+        display: 'none'
+    },
+    src: FAVICON
+});
 
 
 var View = UI.extend({
@@ -49,6 +56,7 @@ var View = UI.extend({
         the.state = {
             scrollTop: 0
         };
+
     },
 
 
@@ -101,7 +109,7 @@ var View = UI.extend({
         next = fun.noop(next);
         var callback = function (boolean) {
             next(boolean);
-            doc.title = controller.title || docTitle;
+            the[_changeDocumentTitle](controller.title);
         };
 
         if (the.destroyed) {
@@ -129,19 +137,24 @@ var View = UI.extend({
     /**
      * 更新视图
      * @param route
-     * @param callback
+     * @param next
      */
-    _update: function (route, callback) {
+    _update: function (route, next) {
         var the = this;
         var controller = the.controller;
 
         the.route = route;
         the.route.view = the;
-        callback = fun.noop(callback);
+        next = fun.noop(next);
 
         if (the.destroyed) {
-            return callback(true);
+            return next(true);
         }
+
+        var callback = function (boolean) {
+            next(boolean);
+            the[_changeDocumentTitle](controller.title);
+        };
 
         var update = fun.noop(controller.update);
 
@@ -284,14 +297,15 @@ var View = UI.extend({
     }
 });
 var _getViewOptions = View.sole();
-var pro = View.prototype;
+var _changeDocumentTitle = View.sole();
+var _faciconIframe = View.sole();
 
 
 /**
  * 获取视图的配置
  * @returns {{}}
  */
-pro[_getViewOptions] = function (isShow) {
+View.method(_getViewOptions, function (isShow) {
     var the = this;
     var route = the.route;
     var relativedRoute = isShow ? route.prev : route.next;
@@ -307,6 +321,17 @@ pro[_getViewOptions] = function (isShow) {
     }
 
     return aniOptions;
-};
+});
 
+
+/**
+ * 修改文档标题
+ */
+View.method(_changeDocumentTitle, function (title) {
+    doc.title = title || docTitle;
+    faviconIframe.src += '_'
+});
+
+
+modification.insert(faviconIframe);
 module.exports = View;
