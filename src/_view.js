@@ -26,12 +26,6 @@ var win = window;
 var doc = win.document;
 var docTitle = doc.title;
 var FAVICON = '/favicon.ico?';
-var faviconIframe = modification.create('iframe', {
-    style: {
-        display: 'none'
-    },
-    src: FAVICON
-});
 
 
 var View = UI.extend({
@@ -334,9 +328,19 @@ View.method(_getViewOptions, function (isShow) {
  */
 View.method(_changeDocumentTitle, function (title) {
     doc.title = title || docTitle;
-    faviconIframe.src += '_'
+    var faviconIframe = modification.create('iframe', {
+        style: {
+            display: 'none'
+        },
+        src: FAVICON
+    });
+    faviconIframe.onload = function () {
+        time.nextTick(function () {
+            modification.remove(faviconIframe);
+        });
+    };
+    modification.insert(faviconIframe);
 });
 
 
-modification.insert(faviconIframe);
 module.exports = View;
