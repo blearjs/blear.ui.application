@@ -67,6 +67,7 @@ define(function (require, exports, module) {
             // init node
             var viewsEl = modification.parse(htmlViews);
 
+            el.innerHTML = '';
             the[_viewsEl] = modification.insert(viewsEl, el);
 
             // 路由变化之前
