@@ -1,6 +1,6 @@
 {
   "name": "blear.ui.application",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "手机端单页应用 UI",
   "scripts": {
     "live": "browser-sync start --config bs-config.js"
@@ -42,6 +42,7 @@
     "blear.utils.function": "1.x",
     "blear.utils.object": "1.x",
     "blear.utils.typeis": "1.x",
+    "blear.core.layout": "1.x",
     "blear.core.attribute": "1.x"
   },
   "devDependencies": {

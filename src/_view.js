@@ -11,8 +11,11 @@
 var UI = require('blear.ui');
 var modification = require('blear.core.modification');
 var selector = require('blear.core.selector');
+var layout = require('blear.core.layout');
 var morphDom = require('blear.shims.morphdom');
 var fun = require('blear.utils.function');
+
+
 var htmlView = require('./view.html', 'html');
 
 
@@ -195,7 +198,7 @@ var View = UI.extend({
                 return callback(can);
             }
 
-            the.state.scrollTop = the.viewEl.scrollTop;
+            the.state.scrollTop = layout.scrollTop(win);
             callback(can);
         };
         var leave = fun.noop(controller.leave);
@@ -228,7 +231,7 @@ var View = UI.extend({
 
         var viewOptions = the[_getViewOptions](true);
         the.visible = true;
-        the.viewEl.scrollTop = the.state.scrollTop;
+        layout.scrollTop(win, the.state.scrollTop);
         options.showAnimation(the.viewEl, viewOptions, function () {
             callback(true);
         });
