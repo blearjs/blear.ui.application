@@ -14,6 +14,7 @@ var selector = require('blear.core.selector');
 var layout = require('blear.core.layout');
 var morphDom = require('blear.shims.morphdom');
 var fun = require('blear.utils.function');
+var time = require('blear.utils.time');
 
 
 var htmlView = require('./view.html', 'html');
@@ -231,8 +232,10 @@ var View = UI.extend({
 
         var viewOptions = the[_getViewOptions](true);
         the.visible = true;
-        layout.scrollTop(win, the.state.scrollTop);
         options.showAnimation(the.viewEl, viewOptions, function () {
+            time.nextFrame(function () {
+                layout.scrollTop(win, the.state.scrollTop);
+            });
             callback(true);
         });
     },
