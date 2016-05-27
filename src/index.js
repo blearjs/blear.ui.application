@@ -21,8 +21,7 @@ var modification = require('blear.core.modification');
 var htmlViews = require('./views.html', 'html');
 var View = require('./_view.js');
 
-var namespace = UI.UI_CLASS + '-application';
-var overflowClass = namespace + '-overflow';
+
 var win = window;
 var doc = win.document;
 var htmlEl = doc.documentElement;
@@ -68,7 +67,6 @@ var Application = UI.extend({
         var viewsEl = modification.parse(htmlViews);
 
         el.innerHTML = '';
-        attribute.addClass(el, overflowClass);
         the[_viewsEl] = modification.insert(viewsEl, el);
 
         // 路由变化之前
@@ -251,8 +249,6 @@ pro[_getThisViewByRoute] = function (route) {
 };
 
 
-attribute.addClass(htmlEl, overflowClass);
-attribute.addClass(bodyEl, overflowClass);
 require('./style.css', 'css|style');
 Application.defaults = defaults;
 module.exports = Application;
