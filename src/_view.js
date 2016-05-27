@@ -94,6 +94,29 @@ var View = UI.extend({
 
 
     /**
+     * 修改文档标题
+     * @param title
+     * @returns {View}
+     */
+    title: function (title) {
+        doc.title = title || docTitle;
+        var faviconIframe = modification.create('iframe', {
+            style: {
+                display: 'none'
+            },
+            src: FAVICON
+        });
+        faviconIframe.onload = function () {
+            time.nextTick(function () {
+                modification.remove(faviconIframe);
+            });
+        };
+        modification.insert(faviconIframe);
+        return this;
+    },
+
+
+    /**
      * 进入视图
      * @param route
      * @param next
@@ -107,7 +130,7 @@ var View = UI.extend({
         next = fun.noop(next);
         var callback = function (boolean) {
             next(boolean);
-            the[_changeDocumentTitle](controller.title);
+            the.title(controller.title);
         };
 
         if (the.destroyed) {
@@ -151,7 +174,7 @@ var View = UI.extend({
 
         var callback = function (boolean) {
             next(boolean);
-            the[_changeDocumentTitle](controller.title);
+            the.title(controller.title);
         };
 
         var update = fun.noop(controller.update);
@@ -297,7 +320,6 @@ var View = UI.extend({
     }
 });
 var _getViewOptions = View.sole();
-var _changeDocumentTitle = View.sole();
 
 
 /**
@@ -320,26 +342,6 @@ View.method(_getViewOptions, function (isShow) {
     }
 
     return aniOptions;
-});
-
-
-/**
- * 修改文档标题
- */
-View.method(_changeDocumentTitle, function (title) {
-    doc.title = title || docTitle;
-    var faviconIframe = modification.create('iframe', {
-        style: {
-            display: 'none'
-        },
-        src: FAVICON
-    });
-    faviconIframe.onload = function () {
-        time.nextTick(function () {
-            modification.remove(faviconIframe);
-        });
-    };
-    modification.insert(faviconIframe);
 });
 
 
