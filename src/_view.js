@@ -15,6 +15,7 @@ var layout = require('blear.core.layout');
 var morphDom = require('blear.shims.morphdom');
 var fun = require('blear.utils.function');
 var time = require('blear.utils.time');
+var scopeCSS = require('blear.utils.scope-css');
 
 
 var htmlView = require('./view.html', 'html');
@@ -88,6 +89,7 @@ var View = UI.extend({
         }
 
         the.decorated = true;
+        style = scopeCSS(style, '#' + the.viewEl.id);
         modification.importStyle(style, the.styleEl);
         return the;
     },
