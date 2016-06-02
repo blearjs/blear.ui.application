@@ -202,4 +202,6 @@ define(function (require, exports, module) {
     document.getElementById('linkPage4').onclick = function () {
         router.redirect('/page4/?x=' + random.number(1, 100));
     };
+
+    router.start();
 });

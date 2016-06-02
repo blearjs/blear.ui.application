@@ -69,24 +69,18 @@ var Application = UI.extend({
         el.innerHTML = '';
         the[_viewsEl] = modification.insert(viewsEl, el);
 
-        // 路由变化之前
-        the.router.on('beforeChange', function (route, next) {
+        the.router._change = function (route, next) {
             var can = !the[_processing];
 
-            if (can) {
-                // 当前控制器未加载过
-                if (!router.done) {
-                    the[_startTransition]();
-                }
-
-                next(can);
-            } else {
-                next(can);
+            if (!can) {
+                return next(can);
             }
-        });
 
-        // 路由变化（控制器加载之后）
-        the.router.on('change', function (route, next) {
+            // 当前控制器未加载过
+            if (!router.done) {
+                the[_startTransition]();
+            }
+
             the[_processing] = true;
 
             var oldView = the[_getViewByRoute](route);
@@ -135,10 +129,10 @@ var Application = UI.extend({
                     thisView._show(next);
                 });
             }
-        });
+        };
 
         // 路由变化之后
-        the.router.on('afterChange', function (changed) {
+        the.router.on('afterChange', function (route, changed) {
             the[_processing] = false;
         });
     },
