@@ -69,16 +69,16 @@ var Application = UI.extend({
         el.innerHTML = '';
         the[_viewsEl] = modification.insert(viewsEl, el);
 
+        the.router.on('beforeLoad', function () {
+            the[_startTransition]();
+        });
+
         the.router._change = function (route, next) {
             var can = !the[_processing];
 
             if (!can) {
+                the[_stopTransition]();
                 return next(can);
-            }
-
-            // 当前控制器未加载过
-            if (!router.done) {
-                the[_startTransition]();
             }
 
             the[_processing] = true;
@@ -97,7 +97,6 @@ var Application = UI.extend({
                 }
                 // path 变化
                 else {
-                    the[_startTransition]();
                     prevView._leave(route.prev, function (can) {
                         // 前一个 view 拒绝离开
                         if (!can) {
