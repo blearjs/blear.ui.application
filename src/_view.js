@@ -276,7 +276,7 @@ var View = UI.extend({
             return callback(true);
         }
 
-        var hide = fun.noop(controller.show);
+        var hide = fun.noop(controller.hide);
         var viewOptions = the[_getViewOptions](false);
         the.visible = false;
         the.state.scrollTop = the.viewEl.scrollTop;
