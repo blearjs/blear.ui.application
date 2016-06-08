@@ -311,7 +311,7 @@ var View = UI.extend({
         the.decorated = false;
         the.destroyed = true;
 
-        var next = function next() {
+        var afterDestroy = function next() {
             modification.remove(the.viewEl);
             modification.remove(the.styleEl);
             the.app = the.viewEl = the.options
@@ -322,17 +322,27 @@ var View = UI.extend({
         };
 
         var destroy = fun.noop(controller.destroy);
+        var afterHide = function () {
+            // async destroy
+            // destroy(view, route, next);
+            if (destroy.length === 3) {
+                destroy(the, the.route, afterDestroy);
+            }
+            // sync destroy
+            // destroy(app, route);
+            else {
+                destroy(the, the.route);
+                afterDestroy(true);
+            }
+        };
 
-        // async destroy
-        // destroy(view, route, next);
-        if (destroy.length === 3) {
-            destroy(the, the.route, next);
-        }
-        // sync destroy
-        // destroy(app, route);
-        else {
-            destroy(the, the.route);
-            next(true);
+        var hide = fun.noop(controller.show);
+
+        if (hide.length === 3) {
+            hide(the, the.route, afterHide);
+        } else {
+            hide(the, the.route);
+            afterHide();
         }
     }
 });
