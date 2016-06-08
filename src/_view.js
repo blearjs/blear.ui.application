@@ -242,6 +242,7 @@ var View = UI.extend({
      */
     _show: function (callback) {
         var the = this;
+        var controller = the.controller;
         var options = the.options;
         callback = fun.noop(callback);
 
@@ -249,11 +250,13 @@ var View = UI.extend({
             return callback(true);
         }
 
+        var show = fun.noop(controller.show);
         var viewOptions = the[_getViewOptions](true);
         the.visible = true;
         options.showAnimation(the.viewEl, viewOptions, function () {
             time.nextFrame(function () {
                 layout.scrollTop(win, the.state.scrollTop);
+                show(the, the.route);
             });
             callback(true);
         });
@@ -266,18 +269,30 @@ var View = UI.extend({
     _hide: function (callback) {
         var the = this;
         var options = the.options;
+        var controller = the.controller;
         callback = fun.noop(callback);
 
         if (!the.visible || the.destroyed) {
             return callback(true);
         }
 
+        var hide = fun.noop(controller.show);
         var viewOptions = the[_getViewOptions](false);
         the.visible = false;
         the.state.scrollTop = the.viewEl.scrollTop;
-        options.hideAnimation(the.viewEl, viewOptions, function () {
-            callback(true);
-        });
+
+        var next = function () {
+            options.hideAnimation(the.viewEl, viewOptions, function () {
+                callback(true);
+            });
+        };
+
+        if (hide.length === 3) {
+            hide(the, the.route, next);
+        } else {
+            hide(the, the.route);
+            next();
+        }
     },
 
 
