@@ -26,7 +26,7 @@ var viewId = 0;
 var win = window;
 var doc = win.document;
 var docTitle = doc.title;
-var FAVICON = '/favicon.ico?';
+var FAVICON = location.origin + '/favicon.ico';
 
 
 var View = UI.extend({
