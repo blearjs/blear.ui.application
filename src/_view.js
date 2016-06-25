@@ -85,11 +85,9 @@ var View = UI.extend({
     style: function (style, _global) {
         var the = this;
 
-        if (the.decorated || the.destroyed) {
+        if (the.destroyed) {
             return;
         }
-
-        the.decorated = true;
 
         if (!_global) {
             style = scopeCSS(style, '#' + the.viewEl.id);
