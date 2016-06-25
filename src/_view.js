@@ -80,8 +80,9 @@ var View = UI.extend({
     /**
      * 注入样式
      * @param style
+     * @param [_global] {Boolean} 是否为全局样式
      */
-    style: function (style) {
+    style: function (style, _global) {
         var the = this;
 
         if (the.decorated || the.destroyed) {
@@ -89,8 +90,12 @@ var View = UI.extend({
         }
 
         the.decorated = true;
-        style = scopeCSS(style, '#' + the.viewEl.id);
-        modification.importStyle(style, the.styleEl);
+
+        if (!_global) {
+            style = scopeCSS(style, '#' + the.viewEl.id);
+        }
+
+        modification.importStyle(style, the.styleEl, true);
         return the;
     },
 
