@@ -282,7 +282,6 @@ var View = UI.extend({
         var hide = fun.noop(controller.hide);
         var viewOptions = the[_getViewOptions](false);
         the.visible = false;
-        the.state.scrollTop = the.viewEl.scrollTop;
 
         var next = function () {
             options.hideAnimation(the.viewEl, viewOptions, function () {
