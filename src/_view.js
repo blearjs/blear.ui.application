@@ -27,6 +27,7 @@ var win = window;
 var doc = win.document;
 var docTitle = doc.title;
 var FAVICON = location.origin + '/favicon.ico';
+var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
 
 var View = UI.extend({
@@ -105,6 +106,11 @@ var View = UI.extend({
      */
     title: function (title) {
         doc.title = title || docTitle;
+
+        if (!isIOS) {
+            return this;
+        }
+
         var faviconIframe = modification.create('iframe', {
             style: {
                 display: 'none'
