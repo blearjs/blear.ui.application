@@ -344,7 +344,7 @@ var View = UI.extend({
             }
         };
 
-        var hide = fun.noop(controller.show);
+        var hide = fun.noop(controller.hide);
 
         if (hide.length === 3) {
             hide(the, the.route, afterHide);

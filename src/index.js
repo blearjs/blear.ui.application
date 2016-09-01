@@ -42,7 +42,7 @@ var defaults = {
      * 最大视图长度
      * @type Number
      */
-    maxLength: 5
+    maxLength: 1
 };
 
 
