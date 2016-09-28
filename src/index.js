@@ -42,7 +42,7 @@ var defaults = {
      * 最大视图长度
      * @type Number
      */
-    maxLength: 1
+    maxLength: 5
 };
 
 
@@ -92,11 +92,11 @@ var Application = UI.extend({
             if (prevView) {
                 // query 变化
                 if (thisView === prevView) {
-                    the[_stopTransition]();
                     thisView._update(route, next);
                 }
                 // path 变化
                 else {
+                    the[_startTransition]();
                     prevView._leave(route.prev, function (can) {
                         // 前一个 view 拒绝离开
                         if (!can) {
