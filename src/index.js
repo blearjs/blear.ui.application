@@ -109,13 +109,13 @@ var Application = UI.extend({
                         // 旧 view 重新进入
                         if (oldView === thisView) {
                             thisView._update(route, function () {
-                                the[_stopTransition]();
                                 thisView._show(next);
+                                the[_stopTransition]();
                             });
                         } else {
                             thisView._enter(route, function () {
-                                the[_stopTransition]();
                                 thisView._show(next);
+                                the[_stopTransition]();
                             });
                         }
                     });
@@ -124,8 +124,8 @@ var Application = UI.extend({
             // 首次进入
             else {
                 thisView._enter(route, function () {
-                    the[_stopTransition]();
                     thisView._show(next);
+                    the[_stopTransition]();
                 });
             }
         };

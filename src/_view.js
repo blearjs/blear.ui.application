@@ -266,8 +266,8 @@ var View = UI.extend({
             time.nextFrame(function () {
                 layout.scrollTop(win, the.state.scrollTop);
                 show(the, the.route);
+                callback(true);
             });
-            callback(true);
         });
     },
 
