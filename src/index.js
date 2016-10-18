@@ -77,8 +77,9 @@ var Application = UI.extend({
             var can = !the[_processing];
 
             if (!can) {
+                next(can);
                 the[_stopTransition]();
-                return next(can);
+                return;
             }
 
             the[_processing] = true;
@@ -98,10 +99,12 @@ var Application = UI.extend({
                 else {
                     the[_startTransition]();
                     prevView._leave(route.prev, function (can) {
+                        next(can);
+
                         // 前一个 view 拒绝离开
                         if (!can) {
                             the[_stopTransition]();
-                            return next(can);
+                            return;
                         }
 
                         prevView._hide();
@@ -109,12 +112,12 @@ var Application = UI.extend({
                         // 旧 view 重新进入
                         if (oldView === thisView) {
                             thisView._update(route, function () {
-                                thisView._show(next);
+                                thisView._show();
                                 the[_stopTransition]();
                             });
                         } else {
                             thisView._enter(route, function () {
-                                thisView._show(next);
+                                thisView._show();
                                 the[_stopTransition]();
                             });
                         }
@@ -123,8 +126,9 @@ var Application = UI.extend({
             }
             // 首次进入
             else {
+                next(true);
                 thisView._enter(route, function () {
-                    thisView._show(next);
+                    thisView._show();
                     the[_stopTransition]();
                 });
             }
