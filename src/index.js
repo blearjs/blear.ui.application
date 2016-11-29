@@ -210,7 +210,7 @@ pro[_getViewByRoute] = function (route) {
 
 
 /**
- * 根据当前路由获取当前路由
+ * 根据当前路由获取当前视图
  * @param route
  */
 pro[_getThisViewByRoute] = function (route) {

@@ -355,13 +355,14 @@ var View = UI.extend({
     }
 });
 var _getViewOptions = View.sole();
+var pro = View.prototype;
 
 
 /**
  * 获取视图的配置
  * @returns {{}}
  */
-View.method(_getViewOptions, function (isShow) {
+pro[_getViewOptions] = function (isShow) {
     var the = this;
     var route = the.route;
     var relativedRoute = isShow ? route.prev : route.next;
@@ -377,7 +378,7 @@ View.method(_getViewOptions, function (isShow) {
     }
 
     return aniOptions;
-});
+};
 
 
 module.exports = View;
