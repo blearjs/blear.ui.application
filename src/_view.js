@@ -326,7 +326,7 @@ var View = UI.extend({
                 = the.styleEl = the.route
                 = the.controller = the.route.view
                 = null;
-            View.parent.destroy(the);
+            View.invoke('destroy', the);
         };
 
         var destroy = fun.noop(controller.destroy);
