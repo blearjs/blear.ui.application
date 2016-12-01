@@ -33,27 +33,27 @@ var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 var View = UI.extend({
     class: 'View',
     constructor: function (app, options, route) {
-        var the = this;
+        var view = this;
         var viewEl = modification.parse(htmlView);
         var styleEl = modification.create('style');
         var viewsEl = app.getViewsElement();
 
-        View.parent(the);
-        the.app = app;
-        the.options = options;
-        the.route = route;
-        the.route.view = the;
-        the.controller = route.controller;
-        the.id = route.id;
+        View.parent(view);
+        view.app = app;
+        view.options = options;
+        view.route = route;
+        view.route.view = view;
+        view.controller = route.controller;
+        view.id = route.id;
         viewEl.id = namespace + '-' + route.id + '-' + (viewId++);
         styleEl.id = namespace + '-' + route.id + '-' + (viewId++);
-        the.viewEl = modification.insert(viewEl, viewsEl);
-        the.el = selector.children(viewEl)[0];
-        the.styleEl = modification.insert(styleEl, viewsEl);
-        the.visible = false;
-        the.decorated = false;
-        the.destroyed = false;
-        the.state = {
+        view.viewEl = modification.insert(viewEl, viewsEl);
+        view.el = selector.children(viewEl)[0];
+        view.styleEl = modification.insert(styleEl, viewsEl);
+        view.visible = false;
+        view.decorated = false;
+        view.destroyed = false;
+        view.state = {
             scrollTop: 0
         };
 
@@ -65,17 +65,17 @@ var View = UI.extend({
      * @param html
      */
     html: function (html) {
-        var the = this;
+        var view = this;
 
-        if (the.destroyed) {
+        if (view.destroyed) {
             return;
         }
 
-        morphDom(the.el, '<div>' + html + '</div>', {
+        morphDom(view.el, '<div>' + html + '</div>', {
             childrenOnly: true
         });
 
-        return the;
+        return view;
     },
 
     /**
@@ -84,18 +84,18 @@ var View = UI.extend({
      * @param [_global] {Boolean} 是否为全局样式
      */
     style: function (style, _global) {
-        var the = this;
+        var view = this;
 
-        if (the.destroyed) {
+        if (view.destroyed) {
             return;
         }
 
         if (!_global) {
-            style = scopeCSS(style, '#' + the.viewEl.id);
+            style = scopeCSS(style, '#' + view.viewEl.id);
         }
 
-        modification.importStyle(style, the.styleEl, true);
-        return the;
+        modification.importStyle(style, view.styleEl, true);
+        return view;
     },
 
 
@@ -105,10 +105,11 @@ var View = UI.extend({
      * @returns {View}
      */
     title: function (title) {
+        var view = this;
         doc.title = title || docTitle;
 
         if (!isIOS) {
-            return this;
+            return view;
         }
 
         var faviconIframe = modification.create('iframe', {
@@ -123,7 +124,7 @@ var View = UI.extend({
             });
         };
         modification.insert(faviconIframe);
-        return this;
+        return view;
     },
 
 
@@ -133,36 +134,40 @@ var View = UI.extend({
      * @param next
      */
     _enter: function (route, next) {
-        var the = this;
-        var controller = the.controller;
+        var view = this;
+        var controller = view.controller;
 
-        the.route = route;
-        the.route.view = the;
+        view.route = route;
+        view.route.view = view;
         next = fun.noop(next);
+
         var callback = function (boolean) {
             next(boolean);
-            the.title(controller.title);
+            view.title(controller.title);
         };
 
-        if (the.destroyed) {
+        if (view.destroyed) {
             return callback(true);
         }
 
         var enter = fun.noop(controller.enter);
+        var watch = fun.noop(controller.watch);
+
+        watch(view, route);
 
         // async enter
         // enter(app, route, next);
         if (enter.length === 3) {
-            enter(the, route, callback);
+            enter(view, route, callback);
         }
         // sync enter
         // enter(app, route);
         else {
-            enter(the, route);
+            enter(view, route);
             callback(true);
         }
 
-        return the;
+        return view;
     },
 
 
@@ -172,33 +177,35 @@ var View = UI.extend({
      * @param next
      */
     _update: function (route, next) {
-        var the = this;
-        var controller = the.controller;
+        var view = this;
+        var controller = view.controller;
 
-        the.route = route;
-        the.route.view = the;
+        view.route = route;
+        view.route.view = view;
         next = fun.noop(next);
 
-        if (the.destroyed) {
+        if (view.destroyed) {
             return next(true);
         }
 
         var callback = function (boolean) {
             next(boolean);
-            the.title(controller.title);
+            view.title(controller.title);
         };
 
         var update = fun.noop(controller.update);
+        var watch = fun.noop(controller.watch);
 
+        watch(view, route);
         // async update
         // update(app, route, next);
         if (update.length === 3) {
-            update(the, route, callback);
+            update(view, route, callback);
         }
         // sync update
         // update(app, route);
         else {
-            update(the, route);
+            update(view, route);
             callback(true);
         }
     },
@@ -210,14 +217,14 @@ var View = UI.extend({
      * @param callback
      */
     _leave: function (route, callback) {
-        var the = this;
-        var controller = the.controller;
+        var view = this;
+        var controller = view.controller;
 
-        the.route = route;
-        the.route.view = the;
+        view.route = route;
+        view.route.view = view;
         callback = fun.noop(callback);
 
-        if (!the.visible || the.destroyed) {
+        if (!view.visible || view.destroyed) {
             return callback(true);
         }
 
@@ -227,20 +234,22 @@ var View = UI.extend({
                 return callback(can);
             }
 
-            the.state.scrollTop = layout.scrollTop(win);
+            view.state.scrollTop = layout.scrollTop(win);
             callback(can);
         };
         var leave = fun.noop(controller.leave);
+        var watch = fun.noop(controller.watch);
 
+        watch(view, route);
         // async leave
         // leave(app, route, next);
         if (leave.length === 3) {
-            leave(the, route, next);
+            leave(view, route, next);
         }
         // sync leave
         // leave(app, route);
         else {
-            leave(the, route);
+            leave(view, route);
             next(true);
         }
     },
@@ -250,22 +259,27 @@ var View = UI.extend({
      * 视图显示
      */
     _show: function (callback) {
-        var the = this;
-        var controller = the.controller;
-        var options = the.options;
+        var view = this;
+        var controller = view.controller;
+        var options = view.options;
+        var route = view.route;
+
         callback = fun.noop(callback);
 
-        if (the.destroyed || the.visible) {
+        if (view.destroyed || view.visible) {
             return callback(true);
         }
 
         var show = fun.noop(controller.show);
-        var viewOptions = the[_getViewOptions](true);
-        the.visible = true;
-        options.showAnimation(the.viewEl, viewOptions, function () {
+        var viewOptions = view[_getViewOptions](true);
+        var watch = fun.noop(controller.watch);
+
+        watch(view, route);
+        view.visible = true;
+        options.showAnimation(view.viewEl, viewOptions, function () {
             time.nextFrame(function () {
-                layout.scrollTop(win, the.state.scrollTop);
-                show(the, the.route);
+                layout.scrollTop(win, view.state.scrollTop);
+                show(view, route);
                 callback(true);
             });
         });
@@ -276,29 +290,34 @@ var View = UI.extend({
      * 视图隐藏
      */
     _hide: function (callback) {
-        var the = this;
-        var options = the.options;
-        var controller = the.controller;
+        var view = this;
+        var options = view.options;
+        var controller = view.controller;
+        var route = view.route;
+
         callback = fun.noop(callback);
 
-        if (!the.visible || the.destroyed) {
+        if (!view.visible || view.destroyed) {
             return callback(true);
         }
 
         var hide = fun.noop(controller.hide);
-        var viewOptions = the[_getViewOptions](false);
-        the.visible = false;
+        var viewOptions = view[_getViewOptions](false);
+        var watch = fun.noop(controller.watch);
+
+        watch(view, route);
+        view.visible = false;
 
         var next = function () {
-            options.hideAnimation(the.viewEl, viewOptions, function () {
+            options.hideAnimation(view.viewEl, viewOptions, function () {
                 callback(true);
             });
         };
 
         if (hide.length === 3) {
-            hide(the, the.route, next);
+            hide(view, route, next);
         } else {
-            hide(the, the.route);
+            hide(view, route);
             next();
         }
     },
@@ -308,49 +327,42 @@ var View = UI.extend({
      * 视图销毁
      */
     _destroy: function () {
-        var the = this;
-        var controller = the.controller;
+        var view = this;
+        var controller = view.controller;
 
-        if (the.destroyed) {
+        if (view.destroyed) {
             return;
         }
 
-        the.visible = false;
-        the.decorated = false;
-        the.destroyed = true;
+        view.visible = false;
+        view.decorated = false;
+        view.destroyed = true;
 
-        var afterDestroy = function next() {
-            modification.remove(the.viewEl);
-            modification.remove(the.styleEl);
-            the.app = the.viewEl = the.options
-                = the.styleEl = the.route
-                = the.controller = the.route.view
+        var next = function next() {
+            modification.remove(view.viewEl);
+            modification.remove(view.styleEl);
+            view.app = view.viewEl = view.options
+                = view.styleEl = view.route
+                = view.controller = view.route.view
                 = null;
-            View.invoke('destroy', the);
+            View.invoke('destroy', view);
         };
 
         var destroy = fun.noop(controller.destroy);
-        var afterHide = function () {
-            // async destroy
-            // destroy(view, route, next);
-            if (destroy.length === 3) {
-                destroy(the, the.route, afterDestroy);
-            }
-            // sync destroy
-            // destroy(app, route);
-            else {
-                destroy(the, the.route);
-                afterDestroy(true);
-            }
-        };
+        var watch = fun.noop(controller.watch);
 
-        var hide = fun.noop(controller.hide);
+        watch(view, route);
 
-        if (hide.length === 3) {
-            hide(the, the.route, afterHide);
-        } else {
-            hide(the, the.route);
-            afterHide();
+        // async destroy
+        // destroy(view, route, next);
+        if (destroy.length === 3) {
+            destroy(view, view.route, next);
+        }
+        // sync destroy
+        // destroy(app, route);
+        else {
+            destroy(view, view.route);
+            next(true);
         }
     }
 });
@@ -363,8 +375,8 @@ var pro = View.prototype;
  * @returns {{}}
  */
 pro[_getViewOptions] = function (isShow) {
-    var the = this;
-    var route = the.route;
+    var view = this;
+    var route = view.route;
     var relativedRoute = isShow ? route.prev : route.next;
     var aniOptions = {};
 

@@ -87,7 +87,7 @@ var Application = UI.extend({
             var oldView = the[_getViewByRoute](route);
             var prevView = the[_getViewByRoute](route.prev);
             // 在后
-            var thisView = the[_getThisViewByRoute](route);
+            var thisView = the[_thisView] = the[_getThisViewByRoute](route);
 
             // 二次
             if (prevView) {
@@ -169,6 +169,7 @@ var _processing = Application.sole();
 var _transiting = Application.sole();
 var _startTransition = Application.sole();
 var _stopTransition = Application.sole();
+var _thisView = Application.sole();
 var pro = Application.prototype;
 
 
@@ -229,6 +230,14 @@ pro[_getThisViewByRoute] = function (route) {
     }
 
     var view = new View(the, the[_options], route);
+
+    /**
+     * 判断当前视图是否前置
+     * @returns {boolean}
+     */
+    view.is = function () {
+        return view === the[_thisView];
+    };
 
     the[_viewsList].push(view);
     the[_viewsIdMap][view.id] = view;
