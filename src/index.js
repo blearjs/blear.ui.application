@@ -15,9 +15,13 @@
 var UI = require('blear.ui');
 var object = require('blear.utils.object');
 var typeis = require('blear.utils.typeis');
+var array = require('blear.utils.array');
 var selector = require('blear.core.selector');
 var attribute = require('blear.core.attribute');
 var modification = require('blear.core.modification');
+var event = require('blear.core.event');
+var layout = require('blear.core.layout');
+
 var htmlViews = require('./views.html', 'html');
 var View = require('./_view.js');
 
@@ -138,6 +142,23 @@ var Application = UI.extend({
         the.router.on('afterChange', function (route, changed) {
             the[_processing] = false;
         });
+
+
+        event.on(win, 'resize', the[_onResize] = function () {
+            var width = layout.innerWidth(el);
+            var height = layout.innerHeight(el);
+            var size = the[_latestSize] = {
+                width: width,
+                height: height
+            };
+
+            attribute.style(the[_viewsEl], size);
+            array.each(the[_viewsList], function (index, view) {
+                view._size(size);
+            });
+        });
+
+        the[_onResize]();
     },
 
 
@@ -170,6 +191,8 @@ var _transiting = Application.sole();
 var _startTransition = Application.sole();
 var _stopTransition = Application.sole();
 var _thisView = Application.sole();
+var _onResize = Application.sole();
+var _latestSize = Application.sole();
 var pro = Application.prototype;
 
 
@@ -230,6 +253,7 @@ pro[_getThisViewByRoute] = function (route) {
     }
 
     var view = new View(the, the[_options], route);
+    view._size(the[_latestSize]);
 
     /**
      * 判断当前视图是否前置

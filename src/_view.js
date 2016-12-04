@@ -12,6 +12,7 @@ var UI = require('blear.ui');
 var modification = require('blear.core.modification');
 var selector = require('blear.core.selector');
 var layout = require('blear.core.layout');
+var attribute = require('blear.core.attribute');
 var morphDom = require('blear.shims.morphdom');
 var fun = require('blear.utils.function');
 var time = require('blear.utils.time');
@@ -48,7 +49,6 @@ var View = UI.extend({
         viewEl.id = namespace + '-' + route.id + '-' + (viewId++);
         styleEl.id = namespace + '-' + route.id + '-' + (viewId++);
         view.viewEl = modification.insert(viewEl, viewsEl);
-        view.el = selector.children(viewEl)[0];
         view.styleEl = modification.insert(styleEl, viewsEl);
         view.visible = false;
         view.decorated = false;
@@ -71,7 +71,7 @@ var View = UI.extend({
             return;
         }
 
-        morphDom(view.el, '<div>' + html + '</div>', {
+        morphDom(view.viewEl, '<div>' + html + '</div>', {
             childrenOnly: true
         });
 
@@ -129,9 +129,20 @@ var View = UI.extend({
 
 
     /**
+     * 设置 view 尺寸
+     * @param size
+     * @private
+     */
+    _size: function (size) {
+        attribute.style(this.viewEl, size);
+    },
+
+
+    /**
      * 进入视图
      * @param route
      * @param next
+     * @private
      */
     _enter: function (route, next) {
         var view = this;
@@ -175,6 +186,7 @@ var View = UI.extend({
      * 更新视图
      * @param route
      * @param next
+     * @private
      */
     _update: function (route, next) {
         var view = this;
@@ -215,6 +227,7 @@ var View = UI.extend({
      * 视图离开
      * @param route
      * @param callback
+     * @private
      */
     _leave: function (route, callback) {
         var view = this;
@@ -234,7 +247,7 @@ var View = UI.extend({
                 return callback(can);
             }
 
-            view.state.scrollTop = layout.scrollTop(win);
+            view.state.scrollTop = layout.scrollTop(view.viewEl);
             callback(can);
         };
         var leave = fun.noop(controller.leave);
@@ -257,6 +270,8 @@ var View = UI.extend({
 
     /**
      * 视图显示
+     * @param callback
+     * @private
      */
     _show: function (callback) {
         var view = this;
@@ -278,7 +293,7 @@ var View = UI.extend({
         view.visible = true;
         options.showAnimation(view.viewEl, viewOptions, function () {
             time.nextFrame(function () {
-                layout.scrollTop(win, view.state.scrollTop);
+                layout.scrollTop(view.viewEl, view.state.scrollTop);
                 show(view, route);
                 callback(true);
             });
@@ -288,6 +303,8 @@ var View = UI.extend({
 
     /**
      * 视图隐藏
+     * @param callback
+     * @private
      */
     _hide: function (callback) {
         var view = this;
@@ -325,6 +342,7 @@ var View = UI.extend({
 
     /**
      * 视图销毁
+     * @private
      */
     _destroy: function () {
         var view = this;

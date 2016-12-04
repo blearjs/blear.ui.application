@@ -1,6 +1,4 @@
-.blearui-application-overflow {
-  height: 100%; }
-
-.blearui-application-views,
 .blearui-application-view {
-  min-height: 100%; }
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch; }

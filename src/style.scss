@@ -1,10 +1,7 @@
 .blearui-application {
-  &-overflow {
-    height: 100%;
-  }
-
-  &-views,
   &-view {
-    min-height: 100%;
+    position: relative;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
