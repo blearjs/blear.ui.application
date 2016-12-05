@@ -307,14 +307,14 @@ pro[_cleanRoute] = function (route) {
         return null;
     }
 
-    return {
-        data: route.data,
-        path: route.path,
-        pathname: route.pathname,
-        rule: route.rule,
-        query: route.query,
-        params: route.params
-    };
+    return object.filter(route, [
+        'data',
+        'path',
+        'pathname',
+        'rule',
+        'query',
+        'params'
+    ]);
 };
 
 
