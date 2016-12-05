@@ -134,7 +134,7 @@ var View = UI.extend({
      * @private
      */
     _size: function (size) {
-        attribute.style(this.viewEl, size);
+        attribute.style(this.el, size);
     },
 
 

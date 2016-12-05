@@ -1,6 +1,6 @@
 {
   "name": "blear.ui.application",
-  "version": "1.0.35",
+  "version": "1.0.36",
   "description": "手机端单页应用 UI",
   "scripts": {
     "live": "browser-sync start --config bs-config.js"
