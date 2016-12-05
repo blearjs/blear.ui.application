@@ -97,11 +97,14 @@ var Application = UI.extend({
             if (prevView) {
                 // query 变化
                 if (thisView === prevView) {
+                    the.emit('beforeViewUpdate', thisView, route);
                     thisView._update(route, next);
+                    the.emit('afterViewUpdate', thisView, route);
                 }
                 // path 变化
                 else {
                     the[_startTransition]();
+                    the.emit('beforeViewLeave', thisView, route);
                     prevView._leave(route.prev, function (can) {
                         next(can);
 
@@ -111,17 +114,28 @@ var Application = UI.extend({
                             return;
                         }
 
+                        the.emit('afterViewLeave', thisView, route);
+                        the.emit('beforeViewHide', thisView, route);
                         prevView._hide();
+                        the.emit('afterViewHide', thisView, route);
 
                         // 旧 view 重新进入
                         if (oldView === thisView) {
+                            the.emit('beforeViewUpdate', thisView, route);
                             thisView._update(route, function () {
+                                the.emit('afterViewUpdate', thisView, route);
+                                the.emit('beforeViewShow', thisView, route);
                                 thisView._show();
+                                the.emit('afterViewShow', thisView, route);
                                 the[_stopTransition]();
                             });
                         } else {
+                            the.emit('beforeViewEnter', thisView, route);
                             thisView._enter(route, function () {
+                                the.emit('afterViewEnter', thisView, route);
+                                the.emit('beforeViewShow', thisView, route);
                                 thisView._show();
+                                the.emit('afterViewShow', thisView, route);
                                 the[_stopTransition]();
                             });
                         }
@@ -131,8 +145,12 @@ var Application = UI.extend({
             // 首次进入
             else {
                 next(true);
+                the.emit('beforeViewEnter', thisView, route);
                 thisView._enter(route, function () {
+                    the.emit('afterViewEnter', thisView, route);
+                    the.emit('beforeViewShow', thisView, route);
                     thisView._show();
+                    the.emit('afterViewShow', thisView, route);
                     the[_stopTransition]();
                 });
             }
