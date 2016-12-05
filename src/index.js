@@ -92,19 +92,22 @@ var Application = UI.extend({
             var prevView = the[_getViewByRoute](route.prev);
             // 在后
             var thisView = the[_thisView] = the[_getThisViewByRoute](route);
+            var paramRoute = the[_cleanRoute](route);
+            paramRoute.prev = the[_cleanRoute](route.prev);
+            paramRoute.next = the[_cleanRoute](route.next);
 
             // 二次
             if (prevView) {
                 // query 变化
                 if (thisView === prevView) {
-                    the.emit('beforeViewUpdate', thisView, route);
+                    the.emit('beforeViewUpdate', thisView, paramRoute);
                     thisView._update(route, next);
-                    the.emit('afterViewUpdate', thisView, route);
+                    the.emit('afterViewUpdate', thisView, paramRoute);
                 }
                 // path 变化
                 else {
                     the[_startTransition]();
-                    the.emit('beforeViewLeave', thisView, route);
+                    the.emit('beforeViewLeave', thisView, paramRoute);
                     prevView._leave(route.prev, function (can) {
                         next(can);
 
@@ -114,28 +117,28 @@ var Application = UI.extend({
                             return;
                         }
 
-                        the.emit('afterViewLeave', thisView, route);
-                        the.emit('beforeViewHide', thisView, route);
+                        the.emit('afterViewLeave', thisView, paramRoute);
+                        the.emit('beforeViewHide', thisView, paramRoute);
                         prevView._hide();
-                        the.emit('afterViewHide', thisView, route);
+                        the.emit('afterViewHide', thisView, paramRoute);
 
                         // 旧 view 重新进入
                         if (oldView === thisView) {
-                            the.emit('beforeViewUpdate', thisView, route);
+                            the.emit('beforeViewUpdate', thisView, paramRoute);
                             thisView._update(route, function () {
-                                the.emit('afterViewUpdate', thisView, route);
-                                the.emit('beforeViewShow', thisView, route);
+                                the.emit('afterViewUpdate', thisView, paramRoute);
+                                the.emit('beforeViewShow', thisView, paramRoute);
                                 thisView._show();
-                                the.emit('afterViewShow', thisView, route);
+                                the.emit('afterViewShow', thisView, paramRoute);
                                 the[_stopTransition]();
                             });
                         } else {
-                            the.emit('beforeViewEnter', thisView, route);
+                            the.emit('beforeViewEnter', thisView, paramRoute);
                             thisView._enter(route, function () {
-                                the.emit('afterViewEnter', thisView, route);
-                                the.emit('beforeViewShow', thisView, route);
+                                the.emit('afterViewEnter', thisView, paramRoute);
+                                the.emit('beforeViewShow', thisView, paramRoute);
                                 thisView._show();
-                                the.emit('afterViewShow', thisView, route);
+                                the.emit('afterViewShow', thisView, paramRoute);
                                 the[_stopTransition]();
                             });
                         }
@@ -145,12 +148,12 @@ var Application = UI.extend({
             // 首次进入
             else {
                 next(true);
-                the.emit('beforeViewEnter', thisView, route);
+                the.emit('beforeViewEnter', thisView, paramRoute);
                 thisView._enter(route, function () {
-                    the.emit('afterViewEnter', thisView, route);
-                    the.emit('beforeViewShow', thisView, route);
+                    the.emit('afterViewEnter', thisView, paramRoute);
+                    the.emit('beforeViewShow', thisView, paramRoute);
                     thisView._show();
-                    the.emit('afterViewShow', thisView, route);
+                    the.emit('afterViewShow', thisView, paramRoute);
                     the[_stopTransition]();
                 });
             }
@@ -211,6 +214,7 @@ var _stopTransition = Application.sole();
 var _thisView = Application.sole();
 var _onResize = Application.sole();
 var _latestSize = Application.sole();
+var _cleanRoute = Application.sole();
 var pro = Application.prototype;
 
 
@@ -294,6 +298,23 @@ pro[_getThisViewByRoute] = function (route) {
     }
 
     return view;
+};
+
+
+// 清洁 route
+pro[_cleanRoute] = function (route) {
+    if (!route) {
+        return null;
+    }
+
+    return {
+        data: route.data,
+        path: route.path,
+        pathname: route.pathname,
+        rule: route.rule,
+        query: route.query,
+        params: route.params
+    };
 };
 
 

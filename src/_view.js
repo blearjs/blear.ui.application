@@ -48,7 +48,8 @@ var View = UI.extend({
         view.id = route.id;
         viewEl.id = namespace + '-' + route.id + '-' + (viewId++);
         styleEl.id = namespace + '-' + route.id + '-' + (viewId++);
-        view.el = modification.insert(viewEl, viewsEl);
+        view.viewEl = modification.insert(viewEl, viewsEl);
+        view.el = selector.children(viewEl)[0];
         view.styleEl = modification.insert(styleEl, viewsEl);
         view.visible = false;
         view.decorated = false;
@@ -91,7 +92,7 @@ var View = UI.extend({
         }
 
         if (!_global) {
-            style = scopeCSS(style, '#' + view.el.id);
+            style = scopeCSS(style, '#' + view.viewEl.id);
         }
 
         modification.importStyle(style, view.styleEl, true);
@@ -134,7 +135,7 @@ var View = UI.extend({
      * @private
      */
     _size: function (size) {
-        attribute.style(this.el, size);
+        attribute.style(this.viewEl, size);
     },
 
 
@@ -247,7 +248,7 @@ var View = UI.extend({
                 return callback(can);
             }
 
-            view.state.scrollTop = layout.scrollTop(view.el);
+            view.state.scrollTop = layout.scrollTop(view.viewEl);
             callback(can);
         };
         var leave = fun.noop(controller.leave);
@@ -291,9 +292,9 @@ var View = UI.extend({
 
         watch(view, route);
         view.visible = true;
-        options.showAnimation(view.el, viewOptions, function () {
+        options.showAnimation(view.viewEl, viewOptions, function () {
             time.nextFrame(function () {
-                layout.scrollTop(view.el, view.state.scrollTop);
+                layout.scrollTop(view.viewEl, view.state.scrollTop);
                 show(view, route);
                 callback(true);
             });
@@ -326,7 +327,7 @@ var View = UI.extend({
         view.visible = false;
 
         var next = function () {
-            options.hideAnimation(view.el, viewOptions, function () {
+            options.hideAnimation(view.viewEl, viewOptions, function () {
                 callback(true);
             });
         };
@@ -358,9 +359,9 @@ var View = UI.extend({
         view.destroyed = true;
 
         var next = function next() {
-            modification.remove(view.el);
+            modification.remove(view.viewEl);
             modification.remove(view.styleEl);
-            view.app = view.el = view.options
+            view.app = view.viewEl = view.options
                 = view.styleEl = view.route
                 = view.controller = view.route.view
                 = null;
