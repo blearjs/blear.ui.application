@@ -347,6 +347,7 @@ var View = UI.extend({
     _destroy: function () {
         var view = this;
         var controller = view.controller;
+        var route = view.route;
 
         if (view.destroyed) {
             return;
@@ -374,12 +375,12 @@ var View = UI.extend({
         // async destroy
         // destroy(view, route, next);
         if (destroy.length === 3) {
-            destroy(view, view.route, next);
+            destroy(view, route, next);
         }
         // sync destroy
         // destroy(app, route);
         else {
-            destroy(view, view.route);
+            destroy(view, route);
             next(true);
         }
     }
