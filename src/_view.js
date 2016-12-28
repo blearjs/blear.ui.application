@@ -248,7 +248,7 @@ var View = UI.extend({
                 return callback(can);
             }
 
-            view.state.scrollTop = layout.scrollTop(view.viewEl);
+            view.state.scrollTop = layout.scrollTop(win);
             callback(can);
         };
         var leave = fun.noop(controller.leave);
@@ -294,8 +294,8 @@ var View = UI.extend({
         view.visible = true;
         options.showAnimation(view.viewEl, viewOptions, function () {
             time.nextFrame(function () {
-                layout.scrollTop(view.viewEl, view.state.scrollTop);
                 show(view, route);
+                layout.scrollTop(win, view.state.scrollTop);
                 callback(true);
             });
         });

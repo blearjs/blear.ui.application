@@ -163,23 +163,6 @@ var Application = UI.extend({
         the.router.on('afterChange', function (route, changed) {
             the[_processing] = false;
         });
-
-
-        event.on(win, 'resize', the[_onResize] = function () {
-            var width = layout.innerWidth(el);
-            var height = layout.innerHeight(el);
-            var size = the[_latestSize] = {
-                width: width,
-                height: height
-            };
-
-            attribute.style(the[_viewsEl], size);
-            array.each(the[_viewsList], function (index, view) {
-                view._size(size);
-            });
-        });
-
-        the[_onResize]();
     },
 
 
