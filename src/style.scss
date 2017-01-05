@@ -1,3 +1,23 @@
 .blearui-application {
+  &-fullpage,
+  &-views,
+  &-view,
+  &-view-inner {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 
+  &-views,
+  &-view,
+  &-view-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &-view-inner {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }

@@ -156,6 +156,7 @@ var View = UI.extend({
         var callback = function (boolean) {
             next(boolean);
             view.title(controller.title);
+            attribute.addClass(view.viewEl, controller.name || '');
         };
 
         if (view.destroyed) {
@@ -248,7 +249,7 @@ var View = UI.extend({
                 return callback(can);
             }
 
-            view.state.scrollTop = layout.scrollTop(win);
+            view.state.scrollTop = layout.scrollTop(view.viewEl);
             callback(can);
         };
         var leave = fun.noop(controller.leave);
@@ -292,10 +293,11 @@ var View = UI.extend({
 
         watch(view, route);
         view.visible = true;
+        attribute.show(view.viewEl);
         options.showAnimation(view.viewEl, viewOptions, function () {
             time.nextFrame(function () {
                 show(view, route);
-                layout.scrollTop(win, view.state.scrollTop);
+                layout.scrollTop(view.viewEl, view.state.scrollTop);
                 callback(true);
             });
         });
@@ -328,6 +330,7 @@ var View = UI.extend({
 
         var next = function () {
             options.hideAnimation(view.viewEl, viewOptions, function () {
+                attribute.hide(view.viewEl);
                 callback(true);
             });
         };

@@ -22,23 +22,23 @@ var modification = require('blear.core.modification');
 var event = require('blear.core.event');
 var layout = require('blear.core.layout');
 
-var htmlViews = require('./views.html', 'html');
 var View = require('./_view.js');
-
 
 var win = window;
 var doc = win.document;
 var htmlEl = doc.documentElement;
 var bodyEl = doc.body;
+var namespace = 'blearui-application';
 var defaults = {
     el: null,
+
+    platform: 'mobile',
+
     showAnimation: function (el, viewOptions, done) {
-        attribute.show(el);
         done();
     },
 
     hideAnimation: function (el, viewOptions, done) {
-        attribute.hide(el);
         done();
     },
 
@@ -48,8 +48,6 @@ var defaults = {
      */
     maxLength: 5
 };
-
-
 var Application = UI.extend({
     className: 'Application',
     constructor: function (router, options) {
@@ -65,13 +63,6 @@ var Application = UI.extend({
         // 是否正在处理
         the[_processing] = false;
         the[_transiting] = false;
-
-        var el = selector.query(options.el)[0];
-        // init node
-        var viewsEl = modification.parse(htmlViews);
-
-        el.innerHTML = '';
-        the[_viewsEl] = modification.insert(viewsEl, el);
 
         the.router.on('beforeLoad', function () {
             the[_startTransition]();
@@ -163,6 +154,9 @@ var Application = UI.extend({
         the.router.on('afterChange', function (route, changed) {
             the[_processing] = false;
         });
+
+        the[_initNode]();
+        the[_initStyle]();
     },
 
 
@@ -192,6 +186,8 @@ var _getViewByRoute = Application.sole();
 var _getThisViewByRoute = Application.sole();
 var _processing = Application.sole();
 var _transiting = Application.sole();
+var _initNode = Application.sole();
+var _initStyle = Application.sole();
 var _startTransition = Application.sole();
 var _stopTransition = Application.sole();
 var _thisView = Application.sole();
@@ -200,6 +196,28 @@ var _latestSize = Application.sole();
 var _cleanRoute = Application.sole();
 var pro = Application.prototype;
 
+pro[_initNode] = function () {
+    var the = this;
+    var options = the[_options];
+    var el = selector.query(options.el)[0];
+
+    the[_viewsEl] = el;
+    attribute.addClass(el, namespace + '-views');
+};
+
+pro[_initStyle] = function () {
+    var the = this;
+    var options = the[_options];
+
+    if (options.platform !== 'mobile') {
+        return;
+    }
+
+    require('./style.css', 'css|style');
+    var fullpageClassName = namespace + '-fullpage';
+    attribute.addClass(htmlEl, fullpageClassName);
+    attribute.addClass(bodyEl, fullpageClassName);
+};
 
 /**
  * 开始过渡
@@ -301,7 +319,6 @@ pro[_cleanRoute] = function (route) {
 };
 
 
-require('./style.css', 'css|style');
 Application.defaults = defaults;
 module.exports = Application;
 
