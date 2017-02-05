@@ -128,17 +128,6 @@ var View = UI.extend({
         return view;
     },
 
-
-    /**
-     * 设置 view 尺寸
-     * @param size
-     * @private
-     */
-    _size: function (size) {
-        attribute.style(this.viewEl, size);
-    },
-
-
     /**
      * 进入视图
      * @param route
@@ -183,7 +172,6 @@ var View = UI.extend({
         return view;
     },
 
-
     /**
      * 更新视图
      * @param route
@@ -223,7 +211,6 @@ var View = UI.extend({
             callback(true);
         }
     },
-
 
     /**
      * 视图离开
@@ -269,7 +256,6 @@ var View = UI.extend({
         }
     },
 
-
     /**
      * 视图显示
      * @param callback
@@ -302,7 +288,6 @@ var View = UI.extend({
             });
         });
     },
-
 
     /**
      * 视图隐藏
@@ -342,7 +327,6 @@ var View = UI.extend({
             next();
         }
     },
-
 
     /**
      * 视图销毁

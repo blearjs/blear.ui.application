@@ -276,7 +276,6 @@ pro[_getThisViewByRoute] = function (route) {
     }
 
     var view = new View(the, the[_options], route);
-    view._size(the[_latestSize]);
 
     /**
      * 判断当前视图是否前置
