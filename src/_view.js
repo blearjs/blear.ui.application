@@ -48,6 +48,7 @@ var View = UI.extend({
         view.id = route.id;
         viewEl.id = namespace + '-' + route.id + '-' + (viewId++);
         styleEl.id = namespace + '-' + route.id + '-' + (viewId++);
+        view.viewsEl = viewsEl;
         view.viewEl = modification.insert(viewEl, viewsEl);
         view.el = selector.children(viewEl)[0];
         view.styleEl = modification.insert(styleEl, viewsEl);
@@ -128,6 +129,17 @@ var View = UI.extend({
         return view;
     },
 
+
+    /**
+     * 设置 view 尺寸
+     * @param size
+     * @private
+     */
+    _size: function (size) {
+        attribute.style(this.viewEl, size);
+    },
+
+
     /**
      * 进入视图
      * @param route
@@ -140,7 +152,7 @@ var View = UI.extend({
 
         view.route = route;
         view.route.view = view;
-        next = fun.noop(next);
+        next = fun.ensure(next);
 
         var callback = function (boolean) {
             next(boolean);
@@ -152,8 +164,8 @@ var View = UI.extend({
             return callback(true);
         }
 
-        var enter = fun.noop(controller.enter);
-        var watch = fun.noop(controller.watch);
+        var enter = fun.ensure(controller.enter);
+        var watch = fun.ensure(controller.watch);
 
         watch(view, route);
 
@@ -172,6 +184,7 @@ var View = UI.extend({
         return view;
     },
 
+
     /**
      * 更新视图
      * @param route
@@ -184,7 +197,7 @@ var View = UI.extend({
 
         view.route = route;
         view.route.view = view;
-        next = fun.noop(next);
+        next = fun.ensure(next);
 
         if (view.destroyed) {
             return next(true);
@@ -195,8 +208,8 @@ var View = UI.extend({
             view.title(controller.title);
         };
 
-        var update = fun.noop(controller.update);
-        var watch = fun.noop(controller.watch);
+        var update = fun.ensure(controller.update);
+        var watch = fun.ensure(controller.watch);
 
         watch(view, route);
         // async update
@@ -212,6 +225,7 @@ var View = UI.extend({
         }
     },
 
+
     /**
      * 视图离开
      * @param route
@@ -224,7 +238,7 @@ var View = UI.extend({
 
         view.route = route;
         view.route.view = view;
-        callback = fun.noop(callback);
+        callback = fun.ensure(callback);
 
         if (!view.visible || view.destroyed) {
             return callback(true);
@@ -239,8 +253,8 @@ var View = UI.extend({
             view.state.scrollTop = layout.scrollTop(view.viewEl);
             callback(can);
         };
-        var leave = fun.noop(controller.leave);
-        var watch = fun.noop(controller.watch);
+        var leave = fun.ensure(controller.leave);
+        var watch = fun.ensure(controller.watch);
 
         watch(view, route);
         // async leave
@@ -256,6 +270,7 @@ var View = UI.extend({
         }
     },
 
+
     /**
      * 视图显示
      * @param callback
@@ -267,18 +282,19 @@ var View = UI.extend({
         var options = view.options;
         var route = view.route;
 
-        callback = fun.noop(callback);
+        callback = fun.ensure(callback);
 
         if (view.destroyed || view.visible) {
             return callback(true);
         }
 
-        var show = fun.noop(controller.show);
+        var show = fun.ensure(controller.show);
         var viewOptions = view[_getViewOptions](true);
-        var watch = fun.noop(controller.watch);
+        var watch = fun.ensure(controller.watch);
 
         watch(view, route);
         view.visible = true;
+        view.viewsEl.appendChild(view.viewEl);
         attribute.show(view.viewEl);
         options.showAnimation(view.viewEl, viewOptions, function () {
             time.nextFrame(function () {
@@ -288,6 +304,7 @@ var View = UI.extend({
             });
         });
     },
+
 
     /**
      * 视图隐藏
@@ -300,15 +317,15 @@ var View = UI.extend({
         var controller = view.controller;
         var route = view.route;
 
-        callback = fun.noop(callback);
+        callback = fun.ensure(callback);
 
         if (!view.visible || view.destroyed) {
             return callback(true);
         }
 
-        var hide = fun.noop(controller.hide);
+        var hide = fun.ensure(controller.hide);
         var viewOptions = view[_getViewOptions](false);
-        var watch = fun.noop(controller.watch);
+        var watch = fun.ensure(controller.watch);
 
         watch(view, route);
         view.visible = false;
@@ -316,6 +333,7 @@ var View = UI.extend({
         var next = function () {
             options.hideAnimation(view.viewEl, viewOptions, function () {
                 attribute.hide(view.viewEl);
+                view.viewsEl.removeChild(view.viewEl);
                 callback(true);
             });
         };
@@ -327,6 +345,7 @@ var View = UI.extend({
             next();
         }
     },
+
 
     /**
      * 视图销毁
@@ -355,8 +374,8 @@ var View = UI.extend({
             View.invoke('destroy', view);
         };
 
-        var destroy = fun.noop(controller.destroy);
-        var watch = fun.noop(controller.watch);
+        var destroy = fun.ensure(controller.destroy);
+        var watch = fun.ensure(controller.watch);
 
         watch(view, route);
 
