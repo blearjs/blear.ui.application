@@ -49,8 +49,8 @@ var View = UI.extend({
         viewEl.id = namespace + '-' + route.id + '-' + (viewId++);
         styleEl.id = namespace + '-' + route.id + '-' + (viewId++);
         view.viewsEl = viewsEl;
-        view.viewEl = modification.insert(viewEl, viewsEl);
-        view.el = selector.children(viewEl)[0];
+        view.el = modification.insert(viewEl, viewsEl);
+        // view.el = selector.children(viewEl)[0];
         view.styleEl = modification.insert(styleEl, viewsEl);
         view.visible = false;
         view.decorated = false;
@@ -93,7 +93,7 @@ var View = UI.extend({
         }
 
         if (!_global) {
-            style = scopeCSS(style, '#' + view.viewEl.id);
+            style = scopeCSS(style, '#' + view.el.id);
         }
 
         modification.importStyle(style, view.styleEl, true);
@@ -136,7 +136,7 @@ var View = UI.extend({
      * @private
      */
     _size: function (size) {
-        attribute.style(this.viewEl, size);
+        attribute.style(this.el, size);
     },
 
 
@@ -157,7 +157,7 @@ var View = UI.extend({
         var callback = function (boolean) {
             next(boolean);
             view.title(controller.title);
-            attribute.addClass(view.viewEl, controller.name || '');
+            attribute.addClass(view.el, controller.name || '');
         };
 
         if (view.destroyed) {
@@ -250,7 +250,7 @@ var View = UI.extend({
                 return callback(can);
             }
 
-            view.state.scrollTop = layout.scrollTop(view.viewEl);
+            view.state.scrollTop = layout.scrollTop(view.el);
             callback(can);
         };
         var leave = fun.ensure(controller.leave);
@@ -281,6 +281,7 @@ var View = UI.extend({
         var controller = view.controller;
         var options = view.options;
         var route = view.route;
+        var viewEl = view.el;
 
         callback = fun.ensure(callback);
 
@@ -294,14 +295,12 @@ var View = UI.extend({
 
         watch(view, route);
         view.visible = true;
-        view.viewsEl.appendChild(view.viewEl);
-        attribute.show(view.viewEl);
-        options.showAnimation(view.viewEl, viewOptions, function () {
-            time.nextFrame(function () {
-                show(view, route);
-                layout.scrollTop(view.viewEl, view.state.scrollTop);
-                callback(true);
-            });
+        view.viewsEl.appendChild(viewEl);
+        attribute.show(viewEl);
+        layout.scrollTop(viewEl, view.state.scrollTop);
+        options.showAnimation(viewEl, viewOptions, function () {
+            show(view, route);
+            callback(true);
         });
     },
 
@@ -316,6 +315,7 @@ var View = UI.extend({
         var options = view.options;
         var controller = view.controller;
         var route = view.route;
+        var viewEl = view.el;
 
         callback = fun.ensure(callback);
 
@@ -331,9 +331,9 @@ var View = UI.extend({
         view.visible = false;
 
         var next = function () {
-            options.hideAnimation(view.viewEl, viewOptions, function () {
-                attribute.hide(view.viewEl);
-                view.viewsEl.removeChild(view.viewEl);
+            options.hideAnimation(viewEl, viewOptions, function () {
+                attribute.hide(viewEl);
+                view.viewsEl.removeChild(viewEl);
                 callback(true);
             });
         };
@@ -365,9 +365,9 @@ var View = UI.extend({
         view.destroyed = true;
 
         var next = function next() {
-            modification.remove(view.viewEl);
+            modification.remove(view.el);
             modification.remove(view.styleEl);
-            view.app = view.viewEl = view.options
+            view.app = view.el = view.options
                 = view.styleEl = view.route
                 = view.controller = view.route.view
                 = null;
