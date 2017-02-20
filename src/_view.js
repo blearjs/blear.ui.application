@@ -29,7 +29,7 @@ var doc = win.document;
 var docTitle = doc.title;
 var FAVICON = location.origin + '/favicon.ico';
 var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-
+var ensureFun = fun.ensure;
 
 var View = UI.extend({
     class: 'View',
@@ -152,7 +152,7 @@ var View = UI.extend({
 
         view.route = route;
         view.route.view = view;
-        next = fun.ensure(next);
+        next = ensureFun(next);
 
         var callback = function (boolean) {
             next(boolean);
@@ -164,8 +164,8 @@ var View = UI.extend({
             return callback(true);
         }
 
-        var enter = fun.ensure(controller.enter);
-        var watch = fun.ensure(controller.watch);
+        var enter = ensureFun(controller.enter);
+        var watch = ensureFun(controller.watch);
 
         watch(view, route);
 
@@ -197,7 +197,7 @@ var View = UI.extend({
 
         view.route = route;
         view.route.view = view;
-        next = fun.ensure(next);
+        next = ensureFun(next);
 
         if (view.destroyed) {
             return next(true);
@@ -208,8 +208,8 @@ var View = UI.extend({
             view.title(controller.title);
         };
 
-        var update = fun.ensure(controller.update);
-        var watch = fun.ensure(controller.watch);
+        var update = ensureFun(controller.update);
+        var watch = ensureFun(controller.watch);
 
         watch(view, route);
         // async update
@@ -238,7 +238,7 @@ var View = UI.extend({
 
         view.route = route;
         view.route.view = view;
-        callback = fun.ensure(callback);
+        callback = ensureFun(callback);
 
         if (!view.visible || view.destroyed) {
             return callback(true);
@@ -253,8 +253,8 @@ var View = UI.extend({
             view.state.scrollTop = layout.scrollTop(view.el);
             callback(can);
         };
-        var leave = fun.ensure(controller.leave);
-        var watch = fun.ensure(controller.watch);
+        var leave = ensureFun(controller.leave);
+        var watch = ensureFun(controller.watch);
 
         watch(view, route);
         // async leave
@@ -283,15 +283,17 @@ var View = UI.extend({
         var route = view.route;
         var viewEl = view.el;
 
-        callback = fun.ensure(callback);
+        callback = ensureFun(callback);
 
         if (view.destroyed || view.visible) {
             return callback(true);
         }
 
-        var show = fun.ensure(controller.show);
+        var beforeShow = ensureFun(controller.beforeShow);
+        var show = ensureFun(controller.show);
+        var afterShow = ensureFun(controller.afterShow);
         var viewOptions = view[_getViewOptions](true);
-        var watch = fun.ensure(controller.watch);
+        var watch = ensureFun(controller.watch);
 
         watch(view, route);
         view.visible = true;
@@ -299,7 +301,9 @@ var View = UI.extend({
         attribute.show(viewEl);
         show(view, route);
         layout.scrollTop(viewEl, view.state.scrollTop);
+        beforeShow(viewOptions);
         options.showAnimation(viewEl, viewOptions, function () {
+            afterShow(viewOptions);
             callback(true);
         });
     },
@@ -317,23 +321,27 @@ var View = UI.extend({
         var route = view.route;
         var viewEl = view.el;
 
-        callback = fun.ensure(callback);
+        callback = ensureFun(callback);
 
         if (!view.visible || view.destroyed) {
             return callback(true);
         }
 
-        var hide = fun.ensure(controller.hide);
+        var beforeHide = ensureFun(controller.beforeHide);
+        var hide = ensureFun(controller.hide);
+        var afterHide = ensureFun(controller.afterHide);
         var viewOptions = view[_getViewOptions](false);
-        var watch = fun.ensure(controller.watch);
+        var watch = ensureFun(controller.watch);
 
         watch(view, route);
         view.visible = false;
 
         var next = function () {
+            beforeHide(viewOptions);
             options.hideAnimation(viewEl, viewOptions, function () {
                 attribute.hide(viewEl);
                 view.viewsEl.removeChild(viewEl);
+                afterHide(viewOptions);
                 callback(true);
             });
         };
@@ -374,8 +382,8 @@ var View = UI.extend({
             View.invoke('destroy', view);
         };
 
-        var destroy = fun.ensure(controller.destroy);
-        var watch = fun.ensure(controller.watch);
+        var destroy = ensureFun(controller.destroy);
+        var watch = ensureFun(controller.watch);
 
         watch(view, route);
 
