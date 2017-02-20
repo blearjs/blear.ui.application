@@ -297,9 +297,9 @@ var View = UI.extend({
         view.visible = true;
         view.viewsEl.appendChild(viewEl);
         attribute.show(viewEl);
+        show(view, route);
         layout.scrollTop(viewEl, view.state.scrollTop);
         options.showAnimation(viewEl, viewOptions, function () {
-            show(view, route);
             callback(true);
         });
     },
