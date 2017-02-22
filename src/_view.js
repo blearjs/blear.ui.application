@@ -108,6 +108,12 @@ var View = UI.extend({
      */
     title: function (title) {
         var view = this;
+
+        // 待修改的标题等于当前标题，则不作为
+        if (title === doc.title) {
+            return view;
+        }
+
         doc.title = title || docTitle;
 
         if (!isIOS) {
