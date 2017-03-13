@@ -306,6 +306,11 @@ var View = UI.extend({
         view.viewsEl.appendChild(viewEl);
         attribute.show(viewEl);
         show(view, route);
+
+        if (viewOptions.direction !== 'back') {
+            view.state.scrollTop = 0;
+        }
+
         layout.scrollTop(viewEl, view.state.scrollTop);
         beforeShow(viewOptions);
         options.showAnimation(viewEl, viewOptions, function () {
