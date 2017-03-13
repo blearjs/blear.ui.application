@@ -30,23 +30,35 @@ var htmlEl = doc.documentElement;
 var bodyEl = doc.body;
 var namespace = 'blearui-application';
 var defaults = {
+    /**
+     * 根元素
+     */
     el: null,
 
+    /**
+     * 平台，可选：mobile/desktop
+     */
     platform: 'mobile',
 
+    /**
+     * 显示动画，可以根据参数来实现过场动画
+     * @param el
+     * @param viewOptions
+     * @param done
+     */
     showAnimation: function (el, viewOptions, done) {
         done();
     },
 
+    /**
+     * 隐藏动画，可以根据参数来实现过场动画
+     * @param el
+     * @param viewOptions
+     * @param done
+     */
     hideAnimation: function (el, viewOptions, done) {
         done();
-    },
-
-    /**
-     * 最大视图长度
-     * @type Number
-     */
-    maxLength: 5
+    }
 };
 var Application = UI.extend({
     className: 'Application',
@@ -289,13 +301,13 @@ pro[_getThisViewByRoute] = function (route) {
     the[_viewsIdMap][view.id] = view;
     the.emit('pushView', view);
 
-    // 超过最大长度
-    if (the[_viewsList].length > the[_options].maxLength) {
-        var oldestView = the[_viewsList].shift();
-        oldestView._destroy();
-        the[_viewsIdMap][oldestView.id] = null;
-        the.emit('dropView', oldestView);
-    }
+    // // 超过最大长度
+    // if (the[_viewsList].length > the[_options].maxLength) {
+    //     var oldestView = the[_viewsList].shift();
+    //     oldestView._destroy();
+    //     the[_viewsIdMap][oldestView.id] = null;
+    //     the.emit('dropView', oldestView);
+    // }
 
     return view;
 };
