@@ -351,7 +351,7 @@ var View = UI.extend({
             beforeHide(viewOptions);
             options.hideAnimation(viewEl, viewOptions, function () {
                 attribute.hide(viewEl);
-                view.viewsEl.removeChild(viewEl);
+                modification.remove(viewEl);
                 afterHide(viewOptions);
                 callback(true);
             });
