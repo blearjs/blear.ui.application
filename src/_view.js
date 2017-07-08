@@ -10,16 +10,17 @@
 
 var UI = require('blear.ui');
 var modification = require('blear.core.modification');
-var selector = require('blear.core.selector');
 var layout = require('blear.core.layout');
 var attribute = require('blear.core.attribute');
 var morphDom = require('blear.shims.morphdom');
 var fun = require('blear.utils.function');
 var time = require('blear.utils.time');
+var random = require('blear.utils.random');
+var object = require('blear.utils.object');
 var scopeCSS = require('blear.utils.scope-css');
 
 
-var htmlView = require('./view.html', 'html');
+var htmlView = require('./view.html');
 
 
 var namespace = UI.UI_CLASS + '-application';
@@ -65,14 +66,16 @@ var View = UI.extend({
     /**
      * 注入结构
      * @param html
+     * @param [keep]
      */
-    html: function (html) {
+    html: function (html, keep) {
         var view = this;
 
         if (view.destroyed) {
             return;
         }
 
+        html = keep ? html : removeHTMLSpace(html);
         morphDom(view.el, '<div>' + html + '</div>', {
             childrenOnly: true
         });
@@ -439,3 +442,34 @@ pro[_getViewOptions] = function (isShow) {
 
 
 module.exports = View;
+
+
+/**
+ * 移除 HTML 里的多余空白
+ * @param html
+ * @returns {string|XML|*}
+ */
+function removeHTMLSpace(html) {
+    var originalRE = /<(textarea|script|pre|code)\b[\s\S]*?>[\s\S]*?<\/\1>/gi;
+    var tagRE = /<\/?[\w-]+[\s\S]*?>/g;
+    var longSpaceRE = /\s+/g;
+    var orginalMap = {};
+    var store = function (source) {
+        var key = '∆' + random.guid() + '∆';
+        orginalMap[key] = source;
+        return key;
+    };
+
+    html = html
+        .replace(originalRE, store)
+        .replace(tagRE, store)
+        .replace(longSpaceRE, '');
+
+    // 恢复
+    object.each(orginalMap, function (key, val) {
+        html = html.replace(key, val);
+    });
+
+    return html;
+}
+

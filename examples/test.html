@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .container {
+            overflow: hidden;
+        }
+
+        .container-left,
+        .container-right {
+            float: left;
+            width: 50%;
+        }
+
+        textarea {
+            display: block;
+            width: 100%;
+            font-size: 18px;
+            height: 400px;
+        }
+
+        button {
+            font-size: 30px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="container-left">
+        input
+        <textarea id="input">
+
+    <p>   1    2    3     </p>
+
+    <p title="  1  2   3">   1    2    3     </p>
+    <p
+            title="  1  2   3">   1    2    3     </p>
+
+    <pre>
+        456
+    </pre>
+
+
+    <pre title="a   b  c">
+        456
+    </pre>
+
+
+    <pre
+            title="a   b  c">
+        456
+    </pre>
+
+</textarea>
+    </div>
+    <div class="container-right">
+        output
+        <textarea id="output"></textarea>
+    </div>
+
+</div>
+
+<hr>
+
+<button id="convert">转换</button>
+
+
+<script>
+    (function () {
+        var inputEl = document.getElementById('input');
+        var outputEl = document.getElementById('output');
+        var convertEl = document.getElementById('convert');
+
+        function removeHTMLSpace(html) {
+            var originalRE = /<(textarea|script|pre|code)\b[\s\S]*?>[\s\S]*?<\/\1>/gi;
+            var tagRE = /<\/?[\w-]+[\s\S]*?>/g;
+            var longSpaceRE = /\s+/g;
+            var orginalMap = {};
+
+            html = html.replace(originalRE, function (source) {
+                var key = '∆' + Math.random().toString() + '∆';
+                orginalMap[key] = source;
+                return key;
+            }).replace(tagRE, function (source) {
+                var key = '∆' + Math.random().toString() + '∆';
+                orginalMap[key] = source;
+                return key;
+            }).replace(longSpaceRE, '');
+
+            for (var key in orginalMap) {
+                var val = orginalMap[key];
+                html = html.replace(key, val);
+            }
+
+            return html;
+        }
+
+        convertEl.onclick = function () {
+            outputEl.value = removeHTMLSpace(inputEl.value);
+        };
+    }());
+</script>
+
+
+</body>
+</html>
