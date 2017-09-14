@@ -165,7 +165,6 @@ var View = UI.extend({
 
         var callback = function (boolean) {
             next(boolean);
-            view.title(controller.title);
             attribute.addClass(view.el, controller.name || '');
         };
 
@@ -177,6 +176,7 @@ var View = UI.extend({
         var watch = ensureFun(controller.watch);
 
         watch(view, route);
+        view.title(controller.title);
 
         // async enter
         // enter(app, route, next);
