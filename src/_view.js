@@ -212,25 +212,22 @@ var View = UI.extend({
             return next(true);
         }
 
-        var callback = function (boolean) {
-            next(boolean);
-            view.title(controller.title);
-        };
-
         var update = ensureFun(controller.update);
         var watch = ensureFun(controller.watch);
 
         watch(view, route);
+        view.title(controller.title);
+
         // async update
         // update(app, route, next);
         if (update.length === 3) {
-            update(view, route, callback);
+            update(view, route, next);
         }
         // sync update
         // update(app, route);
         else {
             update(view, route);
-            callback(true);
+            next(true);
         }
     },
 
