@@ -78,6 +78,7 @@ var transformOptions = {
 };
 var app = window.app = new Application(router, {
     el: '#app',
+    platform: 'mobile',
     showAnimation: function (el, options, next) {
         var next2 = function () {
             // 把 transform 从 dom 中删除，否则会影响 zIndex
