@@ -14,7 +14,7 @@ var attribute = require('blear.core.attribute');
 var selector = require('blear.core.selector');
 var object = require('blear.utils.object');
 
-var Viewer = require('./viewer');
+var Viewer = require('./engine');
 
 var namespace = 'blearui-application';
 var defaults = {
