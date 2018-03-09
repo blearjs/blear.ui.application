@@ -20,11 +20,12 @@ var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 var docTitle = doc.title;
 var View = Class.extend({
     className: 'View',
-    constructor: function (viewsEl, viewEl, styleEl) {
+    constructor: function (id, viewsEl, viewEl, styleEl) {
         var the = this;
 
         View.parent(the);
         the.viewsEl = viewsEl;
+        the.id = id;
         the.el = the.viewEl = viewEl;
         the.styleEl = styleEl;
     },

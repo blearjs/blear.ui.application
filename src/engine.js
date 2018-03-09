@@ -30,12 +30,12 @@ var Viewer = Class.extend({
             class: namespace,
             id: id + '-style'
         });
-        var viewEl = the[_viewEl] = modification.create('section', {
+        var viewEl = the[_viewEl] = modification.create('div', {
             class: namespace,
-            id: id + '-section'
+            id: id + '-div'
         });
 
-        the[_view] = new View(viewsEl, viewEl, styleEl);
+        the[_view] = new View(id, viewsEl, viewEl, styleEl);
         the[_scrollTop] = 0;
         the[_platform] = platform;
         the[_showAnimation] = showAnimation;
