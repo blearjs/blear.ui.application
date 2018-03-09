@@ -14,7 +14,7 @@ var attribute = require('blear.core.attribute');
 var selector = require('blear.core.selector');
 var object = require('blear.utils.object');
 
-var View = require('./view');
+var Viewer = require('./viewer');
 
 var namespace = 'blearui-application';
 var defaults = {
@@ -56,7 +56,7 @@ var Application = UI.extend({
         Application.parent(the);
         the[_router] = router;
         the[_options] = object.assign({}, defaults, options);
-        the[_viewMap] = {};
+        the[_viewerMap] = {};
         the[_initNode]();
         the[_initEvent]();
     },
@@ -69,7 +69,7 @@ var Application = UI.extend({
 
         the[_router]
             = the[_options]
-            = the[_viewMap]
+            = the[_viewerMap]
             = null;
         Application.invoke('destroy', the);
     }
@@ -81,8 +81,8 @@ var _options = sole();
 var _viewsEl = sole();
 var _initNode = sole();
 var _initEvent = sole();
-var _getView = sole();
-var _viewMap = sole();
+var _getViewer = sole();
+var _viewerMap = sole();
 var _controllerId = sole();
 var _prevController = sole();
 
@@ -111,8 +111,8 @@ prop[_initEvent] = function () {
 
     the[_router].on('afterChange', function (route) {
         var controller = route.controller;
-        var nextView = the[_getView](controller);
-        var prevView = the[_getView](the[_prevController]);
+        var nextView = the[_getViewer](controller);
+        var prevView = the[_getViewer](the[_prevController]);
 
         // 同一个控制器：页面刷新进入
         if (the[_prevController] === controller) {
@@ -132,7 +132,7 @@ prop[_initEvent] = function () {
     });
 };
 
-prop[_getView] = function (controller) {
+prop[_getViewer] = function (controller) {
     var the = this;
 
     if (!controller) {
@@ -142,8 +142,8 @@ prop[_getView] = function (controller) {
     var controllerId = controller[_controllerId] = controller[_controllerId] || nextControllerId();
     var options = the[_options];
 
-    return the[_viewMap][controllerId] ||
-        (the[_viewMap][controllerId] = new View(the[_viewsEl], options.platform, options.showAnimation, options.hideAnimation));
+    return the[_viewerMap][controllerId] ||
+        (the[_viewerMap][controllerId] = new Viewer(the[_viewsEl], options.platform, options.showAnimation, options.hideAnimation));
 };
 
 

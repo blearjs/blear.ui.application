@@ -106,6 +106,11 @@ var View = Class.extend({
         return the;
     },
 
+    /**
+     * 视图进入
+     * @param route
+     * @param ctrl
+     */
     enter: function (route, ctrl) {
         var the = this;
         var options = {
@@ -117,34 +122,44 @@ var View = Class.extend({
         modification.insert(the.el, the.viewsEl);
 
         if (!the[_installed]) {
-            the[_exec](ctrl.install, route);
             the[_installed] = true;
+            the[_exec](ctrl.install, route);
         }
 
+        the[_exec](ctrl.show, route);
+        the[_exec](ctrl.update, route);
         the[_showAnimation](the.el, options, function () {
             if (options.direction !== 'backward') {
                 the[_scrollTop] = 0;
             }
 
             layout.scrollTop(the.el, the[_scrollTop]);
-            the[_exec](ctrl.show, route);
-            the[_exec](ctrl.update, route);
         });
     },
 
+    /**
+     * 视图隐藏
+     * @param route
+     * @param ctrl
+     */
     hide: function (route, ctrl) {
         var the = this;
         var options = {
             direction: route.direction
         };
+        the[_exec](ctrl.hide, route);
         the[_scrollTop] = layout.scrollTop(the.el);
         the[_hideAnimation](the.el, options, function () {
-            the[_exec](ctrl.hide, route);
             modification.remove(the.styleEl);
             modification.remove(the.el);
         });
     },
 
+    /**
+     * 视图替换
+     * @param route
+     * @param ctrl
+     */
     replace: function (route, ctrl) {
         this[_exec](ctrl.update, route);
     }
