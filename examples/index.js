@@ -21,8 +21,6 @@ define(function (require, exports, module) {
     var attribute = require('blear.core.attribute');
     var layout = require('blear.core.layout');
 
-    var publicHTML = require('./pages/public.html', 'html');
-
     var router = window.router = new Router();
     var loading = window.loading = new Loading();
 
@@ -54,12 +52,12 @@ define(function (require, exports, module) {
             exports.install = function (view, route) {
                 console.log('<page4>', '[enter]', route);
                 var style = '.page-4{background:#ccc;}';
-                view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1>' + publicHTML + '</div>');
+                view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1></div>');
                 view.style(style);
             };
             exports.update = function (view, route) {
                 console.log('<page4>', '[update]', route);
-                view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1>' + publicHTML + '</div>');
+                view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1></div>');
             };
             exports.hide = function (view, route) {
                 console.log('<page4>', '[leave]', route);

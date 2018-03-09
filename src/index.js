@@ -83,6 +83,8 @@ var _initNode = sole();
 var _initEvent = sole();
 var _getView = sole();
 var _viewMap = sole();
+var _controllerId = sole();
+var _prevControllerId = sole();
 
 prop[_initNode] = function () {
     var the = this;
@@ -97,41 +99,56 @@ prop[_initEvent] = function () {
 
     the[_router].on('afterChange', function (route) {
         var ctrl = route.controller;
-        var nextView = the[_getView](route);
-        var prevView = the[_getView](route.prev);
+        var controllerId = ctrl[_controllerId] = ctrl[_controllerId] || nextControllerId();
+        var nextView = the[_getView](controllerId);
+        var prevView = the[_getView](the[_prevControllerId]);
 
-        // 路由方向不变
-        if (route.direction === 'replace') {
+        // 同一个控制器：页面刷新进入
+        if (the[_prevControllerId] === controllerId) {
             nextView.replace(route, ctrl);
         }
-        // 路由方向变化
+        // 不同控制器
         else {
+            // 页面重新进入
             if (prevView) {
                 prevView.hide(route, ctrl, function () {
                     nextView.enter(route, ctrl);
                 });
-            } else {
+            }
+            // 页面首次进入
+            else {
                 nextView.enter(route, ctrl);
             }
         }
+
+        the[_prevControllerId] = controllerId;
     });
 };
 
-prop[_getView] = function (route) {
+prop[_getView] = function (controllerId) {
     var the = this;
 
-    if (!route) {
+    if (!controllerId) {
         return null;
     }
 
-    var routeId = route.id;
     var options = the[_options];
 
-    return the[_viewMap][routeId] ||
-        (the[_viewMap][routeId] = new View(the[_viewsEl], options.platform, options.showAnimation, options.hideAnimation));
+    return the[_viewMap][controllerId] ||
+        (the[_viewMap][controllerId] = new View(the[_viewsEl], options.platform, options.showAnimation, options.hideAnimation));
 };
-
 
 
 Application.defaults = defaults;
 module.exports = Application;
+
+// ==================================
+var controllerId = 1;
+
+/**
+ * 下一个 controller Id
+ * @returns {number}
+ */
+function nextControllerId() {
+    return controllerId++;
+}

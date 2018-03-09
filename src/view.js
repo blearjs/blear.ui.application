@@ -65,7 +65,7 @@ var View = Class.extend({
         var the = this;
 
         if (!global) {
-            text = scopeCSS(text, '#' + the.styleEl.id);
+            text = scopeCSS(text, '#' + the.el.id);
         }
 
         modification.importStyle(text, the.styleEl, true);
@@ -127,6 +127,7 @@ var View = Class.extend({
 
             layout.scrollTop(the.el, the[_scrollTop]);
             the[_exec](ctrl.show, route);
+            the[_exec](ctrl.update, route);
         });
     },
 
