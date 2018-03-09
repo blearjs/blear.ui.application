@@ -16,7 +16,7 @@ var scopeCSS = require('blear.utils.scope-css');
 var time = require('blear.utils.time');
 
 var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-var docTitle = doc.title;
+var docTitle = document.title;
 var namespace = 'blearui-application-view';
 var viewId = 0;
 var View = Class.extend({

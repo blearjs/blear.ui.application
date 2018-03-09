@@ -32,26 +32,26 @@ var defaults = {
     /**
      * 显示动画，可以根据参数来实现过场动画
      * @param el
-     * @param viewOptions
+     * @param options
      * @param done
      */
-    showAnimation: function (el, viewOptions, done) {
+    showAnimation: function (el, options, done) {
         done();
     },
 
     /**
      * 隐藏动画，可以根据参数来实现过场动画
      * @param el
-     * @param viewOptions
+     * @param options
      * @param done
      */
-    hideAnimation: function (el, viewOptions, done) {
+    hideAnimation: function (el, options, done) {
         done();
     }
 };
 var Application = UI.extend({
     className: 'Application',
-    conrtuctor: function (router, options) {
+    constructor: function (router, options) {
         var the = this;
 
         Application.parent(the);
@@ -131,3 +131,7 @@ prop[_getView] = function (route) {
         (the[_viewMap][routeId] = new View(the[_viewsEl], options.showAnimation, options.hideAnimation));
 };
 
+
+
+Application.defaults = defaults;
+module.exports = Application;

@@ -45,6 +45,8 @@
     "blear.utils.time": "^1.0.5"
   },
   "peerDependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "blear.classes.router": "^2.0.0"
+  },
   "license": "MIT"
 }
