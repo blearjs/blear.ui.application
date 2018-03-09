@@ -111,21 +111,21 @@ prop[_initEvent] = function () {
 
     the[_router].on('afterChange', function (route) {
         var controller = route.controller;
-        var nextView = the[_getEngine](controller);
-        var prevView = the[_getEngine](the[_prevController]);
+        var nextEngine = the[_getEngine](controller);
+        var prevEngine = the[_getEngine](the[_prevController]);
 
         // 同一个控制器：页面刷新进入
         if (the[_prevController] === controller) {
-            nextView.replace(route, controller);
+            nextEngine.replace(route, controller);
         }
         // 不同控制器
         else {
             // 旧页面
-            if (prevView) {
-                prevView.hide(route, the[_prevController]);
+            if (prevEngine) {
+                prevEngine.hide(route, the[_prevController]);
             }
 
-            nextView.enter(route, controller);
+            nextEngine.enter(route, controller);
         }
 
         the[_prevController] = controller;

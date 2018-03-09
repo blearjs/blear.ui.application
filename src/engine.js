@@ -63,6 +63,7 @@ var Viewer = Class.extend({
             the[_exec](ctrl.install, route);
         }
 
+        the[_route] = route;
         the[_view].title(ctrl.title);
         the[_exec](ctrl.show, route);
         the[_exec](ctrl.update, route);
@@ -81,11 +82,12 @@ var Viewer = Class.extend({
      * @param ctrl
      */
     hide: function (route, ctrl) {
+        // 此时传入的下一个引擎的路由
         var the = this;
         var options = {
             direction: route.direction
         };
-        the[_exec](ctrl.hide, route);
+        the[_exec](ctrl.hide, the[_route], route);
         the[_scrollTop] = layout.scrollTop(the[_viewEl]);
         the[_hideAnimation](the[_viewEl], options, function () {
             modification.remove(the[_styleEl]);
@@ -99,7 +101,10 @@ var Viewer = Class.extend({
      * @param ctrl
      */
     replace: function (route, ctrl) {
-        this[_exec](ctrl.update, route);
+        var the = this;
+
+        the[_route] = route;
+        the[_exec](ctrl.update, route);
     }
 });
 var prop = Viewer.prototype;
@@ -113,10 +118,11 @@ var _platform = sole();
 var _scrollTop = sole();
 var _viewEl = sole();
 var _styleEl = sole();
+var _route = sole();
 
 module.exports = Viewer;
 
-prop[_exec] = function (callback, route) {
-    fun.ensure(callback).call(window, this[_view], route);
+prop[_exec] = function (callback, route, nextRoute) {
+    fun.ensure(callback).call(window, this[_view], route, nextRoute);
 };
 

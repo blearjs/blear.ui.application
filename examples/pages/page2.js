@@ -1,7 +1,6 @@
 define(function (require, exports, module) {
     exports.install = function (view, route) {
         var style = '.page-2{background:#ffc;}';
-        view.html('<div class="page page-2"><h1>page2 query.r=' + route.query.r + '</h1></div>');
         view.style(style);
     };
     exports.update = function (view, route) {
