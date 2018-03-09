@@ -92,6 +92,13 @@ prop[_initNode] = function () {
 
     the[_viewsEl] = selector.query(options.el)[0];
     attribute.addClass(the[_viewsEl], namespace + '-views');
+
+    if (options.platform === 'mobile') {
+        var fullpageClassName = namespace + '-fullpage';
+        attribute.addClass(document.documentElement, fullpageClassName);
+        attribute.addClass(document.body, fullpageClassName);
+        require('./style.css', 'css|style');
+    }
 };
 
 prop[_initEvent] = function () {
