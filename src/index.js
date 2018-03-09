@@ -116,16 +116,12 @@ prop[_initEvent] = function () {
         }
         // 不同控制器
         else {
-            // 页面重新进入
+            // 旧页面
             if (prevView) {
-                prevView.hide(route, ctrl, function () {
-                    nextView.enter(route, ctrl);
-                });
+                prevView.hide(route, ctrl);
             }
-            // 页面首次进入
-            else {
-                nextView.enter(route, ctrl);
-            }
+
+            nextView.enter(route, ctrl);
         }
 
         the[_prevControllerId] = controllerId;

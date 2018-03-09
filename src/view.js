@@ -109,7 +109,8 @@ var View = Class.extend({
     enter: function (route, ctrl) {
         var the = this;
         var options = {
-            direction: route.direction
+            // 首个 view 进入，则方向为空
+            direction: viewId === 1 ? 'none' : route.direction
         };
 
         modification.insert(the.styleEl, the.viewsEl);
@@ -131,7 +132,7 @@ var View = Class.extend({
         });
     },
 
-    hide: function (route, ctrl, callback) {
+    hide: function (route, ctrl) {
         var the = this;
         var options = {
             direction: route.direction
@@ -141,7 +142,6 @@ var View = Class.extend({
             the[_exec](ctrl.hide, route);
             modification.remove(the.styleEl);
             modification.remove(the.el);
-            callback();
         });
     },
 
