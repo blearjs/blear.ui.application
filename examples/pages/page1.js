@@ -1,7 +1,6 @@
 define(function (require, exports, module) {
     exports.install = function (view, route) {
         var style = '.page-1{background:#cfc;}';
-        view.html('<div class="page page-1"><h1>page1 userId = ' + route.params.userId + '</h1></div>');
         view.style(style);
     };
     exports.update = function (view, route) {

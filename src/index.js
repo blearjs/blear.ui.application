@@ -84,7 +84,8 @@ var _initEvent = sole();
 var _getView = sole();
 var _viewMap = sole();
 var _controllerId = sole();
-var _prevControllerId = sole();
+var _prevController = sole();
+
 
 prop[_initNode] = function () {
     var the = this;
@@ -104,37 +105,41 @@ prop[_initNode] = function () {
 prop[_initEvent] = function () {
     var the = this;
 
+    the[_router].on('beforeChange', function (route) {
+
+    });
+
     the[_router].on('afterChange', function (route) {
-        var ctrl = route.controller;
-        var controllerId = ctrl[_controllerId] = ctrl[_controllerId] || nextControllerId();
-        var nextView = the[_getView](controllerId);
-        var prevView = the[_getView](the[_prevControllerId]);
+        var controller = route.controller;
+        var nextView = the[_getView](controller);
+        var prevView = the[_getView](the[_prevController]);
 
         // 同一个控制器：页面刷新进入
-        if (the[_prevControllerId] === controllerId) {
-            nextView.replace(route, ctrl);
+        if (the[_prevController] === controller) {
+            nextView.replace(route, controller);
         }
         // 不同控制器
         else {
             // 旧页面
             if (prevView) {
-                prevView.hide(route, ctrl);
+                prevView.hide(route, the[_prevController]);
             }
 
-            nextView.enter(route, ctrl);
+            nextView.enter(route, controller);
         }
 
-        the[_prevControllerId] = controllerId;
+        the[_prevController] = controller;
     });
 };
 
-prop[_getView] = function (controllerId) {
+prop[_getView] = function (controller) {
     var the = this;
 
-    if (!controllerId) {
+    if (!controller) {
         return null;
     }
 
+    var controllerId = controller[_controllerId] = controller[_controllerId] || nextControllerId();
     var options = the[_options];
 
     return the[_viewMap][controllerId] ||

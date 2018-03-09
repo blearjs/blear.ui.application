@@ -34,9 +34,9 @@ var View = Class.extend({
             class: namespace,
             id: the.id + '-style'
         });
-        the.el = modification.create('div', {
+        the.el = modification.create('section', {
             class: namespace,
-            id: the.id + '-div'
+            id: the.id + '-section'
         });
         the[_scrollTop] = 0;
         the[_platform] = platform;
