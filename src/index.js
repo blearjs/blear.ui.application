@@ -11,7 +11,6 @@
 
 var UI = require('blear.ui');
 var attribute = require('blear.core.attribute');
-var modification = require('blear.core.modification');
 var selector = require('blear.core.selector');
 var object = require('blear.utils.object');
 
@@ -57,8 +56,9 @@ var Application = UI.extend({
         Application.parent(the);
         the[_router] = router;
         the[_options] = object.assign({}, defaults, options);
-        the[_initNode]();
         the[_viewMap] = {};
+        the[_initNode]();
+        the[_initEvent]();
     },
 
     /**
@@ -107,7 +107,7 @@ prop[_initEvent] = function () {
         // 路由方向变化
         else {
             if (prevView) {
-                prevView.leave(route, ctrl, function () {
+                prevView.hide(route, ctrl, function () {
                     nextView.enter(route, ctrl);
                 });
             } else {
@@ -128,7 +128,7 @@ prop[_getView] = function (route) {
     var options = the[_options];
 
     return the[_viewMap][routeId] ||
-        (the[_viewMap][routeId] = new View(the[_viewsEl], options.showAnimation, options.hideAnimation));
+        (the[_viewMap][routeId] = new View(the[_viewsEl], options.platform, options.showAnimation, options.hideAnimation));
 };
 
 

@@ -11,7 +11,10 @@
 
 var Class = require('blear.classes.class');
 var modification = require('blear.core.modification');
+var layout = require('blear.core.layout');
 var fun = require('blear.utils.function');
+var object = require('blear.utils.object');
+var random = require('blear.utils.random');
 var scopeCSS = require('blear.utils.scope-css');
 var time = require('blear.utils.time');
 
@@ -21,20 +24,22 @@ var namespace = 'blearui-application-view';
 var viewId = 0;
 var View = Class.extend({
     className: 'View',
-    constructor: function (viewsEl, showAnimation, hideAnimation) {
+    constructor: function (viewsEl, platform, showAnimation, hideAnimation) {
         var the = this;
 
         View.parent(the);
         the.viewsEl = viewsEl;
-        the.el = modification.create('div', {
-            class: namespace,
-            id: namespace + viewId++
-        });
+        the.id = namespace + '-' + viewId++;
         the.styleEl = modification.create('style', {
             class: namespace,
-            id: namespace + viewId++
+            id: the.id + '-style'
+        });
+        the.el = modification.create('div', {
+            class: namespace,
+            id: the.id + '-div'
         });
         the[_scrollTop] = 0;
+        the[_platform] = platform;
         the[_showAnimation] = showAnimation;
         the[_hideAnimation] = hideAnimation;
         the[_installed] = false;
@@ -116,15 +121,21 @@ var View = Class.extend({
         }
 
         the[_showAnimation](the.el, options, function () {
+            if (options.direction !== 'backward') {
+                the[_scrollTop] = 0;
+            }
+
+            layout.scrollTop(the.el, the[_scrollTop]);
             the[_exec](ctrl.show, route);
         });
     },
 
-    leave: function (route, ctrl, callback) {
+    hide: function (route, ctrl, callback) {
         var the = this;
         var options = {
             direction: route.direction
         };
+        the[_scrollTop] = layout.scrollTop(the.el);
         the[_hideAnimation](the.el, options, function () {
             the[_exec](ctrl.hide, route);
             modification.remove(the.styleEl);
@@ -143,6 +154,7 @@ var _showAnimation = sole();
 var _hideAnimation = sole();
 var _installed = sole();
 var _exec = sole();
+var _platform = sole();
 var _scrollTop = sole();
 
 module.exports = View;

@@ -9,7 +9,7 @@ define(function (require, exports, module) {
     exports.update = function (app, route) {
         app.html('<div class="page page-3"><h1>page3 query.s=' + route.query.s + '</h1>' + publicHTML + '</div>');
     };
-    exports.leave = function (app, route) {
+    exports.hide = function (app, route) {
         console.log('<page3>', '[leave]', route);
     };
 });

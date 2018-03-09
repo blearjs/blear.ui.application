@@ -259,19 +259,19 @@ var View = UI.extend({
             view.state.scrollTop = layout.scrollTop(view.el);
             callback(can);
         };
-        var leave = ensureFun(controller.leave);
+        var leave = ensureFun(controller.hide);
         var watch = ensureFun(controller.watch);
 
         watch(view, route);
         // async leave
         // leave(app, route, next);
-        if (leave.length === 3) {
-            leave(view, route, next);
+        if (hide.length === 3) {
+            hide(view, route, next);
         }
         // sync leave
         // leave(app, route);
         else {
-            leave(view, route);
+            hide(view, route);
             next(true);
         }
     },

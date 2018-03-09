@@ -16,7 +16,6 @@ define(function (require, exports, module) {
     var Loading = require('blear.ui.loading');
     var UI = require('blear.ui');
     var random = require('blear.utils.random');
-    var howdo = require('blear.utils.howdo');
     var Router = require('blear.classes.router');
     var Animation = require('blear.classes.animation');
     var attribute = require('blear.core.attribute');
@@ -35,7 +34,7 @@ define(function (require, exports, module) {
                 }, 1000);
             });
         })
-        .match('/page2/', function (resolve) {
+        .match('/page2', function (resolve) {
             require.async('./pages/page2.js', function (exports) {
                 setTimeout(function () {
                     resolve(exports);
@@ -52,18 +51,18 @@ define(function (require, exports, module) {
         .match('/page4', function () {
             var exports = {};
 
-            exports.enter = function (app, meta) {
-                console.log('<page4>', '[enter]', meta);
+            exports.install = function (view, route) {
+                console.log('<page4>', '[enter]', route);
                 var style = '.page-4{background:#ccc;}';
-                app.html('<div class="page page-4"><h1>page 4 query.x=' + meta.query.x + '</h1>' + publicHTML + '</div>');
-                app.style(style);
+                view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1>' + publicHTML + '</div>');
+                view.style(style);
             };
-            exports.update = function (app, meta) {
-                console.log('<page4>', '[update]', meta);
-                app.html('<div class="page page-4"><h1>page 4 query.x=' + meta.query.x + '</h1>' + publicHTML + '</div>');
+            exports.update = function (view, route) {
+                console.log('<page4>', '[update]', route);
+                view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1>' + publicHTML + '</div>');
             };
-            exports.leave = function (app, meta) {
-                console.log('<page4>', '[leave]', meta);
+            exports.hide = function (view, route) {
+                console.log('<page4>', '[leave]', route);
             };
 
             return exports;
@@ -76,8 +75,7 @@ define(function (require, exports, module) {
     var showZindex = UI.zIndex();
     var app = window.app = new Application(router, {
         el: '#app',
-        maxLength: 2,
-        showAnimation: function (el, viewOptions, done) {
+        showAnimation2: function (el, viewOptions, done) {
             var an = new Animation(el);
             var winH = layout.height(window);
             var from = {
@@ -137,7 +135,7 @@ define(function (require, exports, module) {
             });
             an.destroy();
         },
-        hideAnimation: function (el, viewOptions, done) {
+        hideAnimation2: function (el, viewOptions, done) {
             var from = {
                 transform: {
                     translateX: 0
@@ -177,7 +175,8 @@ define(function (require, exports, module) {
         }
     });
 
-    app.on('beforeTransition', function (route) {
+    app
+        .on('beforeTransition', function (route) {
             loading.open();
         })
         .on('afterTransition', function (route) {
