@@ -20,28 +20,36 @@ var router = window.router = new Router();
 var loading = window.loading = new Loading();
 
 router
-    .match('/user/:userId', function (resolve) {
+    .match(function (next) {
+        console.log('准备进入', this.href);
+        next();
+    })
+    .match('/user/:userId', function (next) {
+        console.log('进入', this.path);
+        next();
+    })
+    .get('/user/:userId', function (resolve) {
         require.async('./pages/page1.js', function (exports) {
             setTimeout(function () {
                 resolve(exports);
             }, 1000);
         });
     })
-    .match('/page2', function (resolve) {
+    .get('/page2', function (resolve) {
         require.async('./pages/page2.js', function (exports) {
             setTimeout(function () {
                 resolve(exports);
             }, 1000);
         });
     })
-    .match(/^\/page3/, function (resolve) {
+    .get(/^\/page3/, function (resolve) {
         require.async('./pages/page3.js', function (exports) {
             setTimeout(function () {
                 resolve(exports);
             }, 1000);
         });
     })
-    .match('/page4', function () {
+    .get('/page4', function () {
         var exports = {};
 
         exports.install = function (view, route) {
@@ -60,13 +68,13 @@ router
 
         return exports;
     })
-    .otherwise(function (resolve) {
+    .get(function (resolve) {
         require.async('./pages/404.js', resolve);
     });
 
 var transformOptions = {
     easing: [.4, .6, .2, 1],
-    duration: 1000
+    duration: 456
 };
 var app = window.app = new Application(router, {
     el: '#app',
@@ -155,11 +163,11 @@ var app = window.app = new Application(router, {
     }
 });
 
-app
-    .on('beforeTransition', function (route) {
+router
+    .on('beforeChange', function (route) {
         loading.open();
     })
-    .on('afterTransition', function (route) {
+    .on('afterChange', function (route) {
         loading.close();
     });
 

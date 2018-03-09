@@ -116,13 +116,13 @@ prop[_initEvent] = function () {
 
         // 同一个控制器：页面刷新进入
         if (the[_prevController] === controller) {
-            nextEngine.replace(route, controller);
+            nextEngine.reload(route, controller);
         }
         // 不同控制器
         else {
             // 旧页面
             if (prevEngine) {
-                prevEngine.hide(route, the[_prevController]);
+                prevEngine.leave(route, the[_prevController]);
             }
 
             nextEngine.enter(route, controller);

@@ -1,4 +1,5 @@
 define(function (require, exports, module) {
+    exports.title = 'page1';
     exports.install = function (view, route) {
         var style = '.page-1{background:#cfc;}';
         view.style(style);

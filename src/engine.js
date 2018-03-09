@@ -44,7 +44,7 @@ var Viewer = Class.extend({
     },
 
     /**
-     * 视图进入
+     * 引擎进入
      * @param route
      * @param ctrl
      */
@@ -77,11 +77,11 @@ var Viewer = Class.extend({
     },
 
     /**
-     * 视图隐藏
+     * 引擎离开
      * @param route
      * @param ctrl
      */
-    hide: function (route, ctrl) {
+    leave: function (route, ctrl) {
         // 此时传入的下一个引擎的路由
         var the = this;
         var options = {
@@ -96,11 +96,11 @@ var Viewer = Class.extend({
     },
 
     /**
-     * 视图替换
+     * 引擎重启
      * @param route
      * @param ctrl
      */
-    replace: function (route, ctrl) {
+    reload: function (route, ctrl) {
         var the = this;
 
         the[_route] = route;
