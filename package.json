@@ -49,7 +49,7 @@
   "peerDependencies": {},
   "devDependencies": {
     "blear.classes.animation": "^1.1.1",
-    "blear.classes.router": "^2.0.1",
+    "blear.classes.router": "^2.0.4",
     "blear.core.transform": "^1.0.6",
     "blear.ui.loading": "^1.0.11",
     "coolie.js": "^2.2.3"

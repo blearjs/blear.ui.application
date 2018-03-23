@@ -105,9 +105,9 @@ prop[_initNode] = function () {
 prop[_initEvent] = function () {
     var the = this;
 
-    the[_router].on('beforeChange', function (route) {
-
-    });
+    // the[_router].on('beforeChange', function (route) {
+    //
+    // });
 
     the[_router].on('afterChange', function (route) {
         var controller = route.controller;
@@ -120,12 +120,12 @@ prop[_initEvent] = function () {
         }
         // 不同控制器
         else {
+            nextEngine.enter(route, controller);
+
             // 旧页面
             if (prevEngine) {
                 prevEngine.leave(route, the[_prevController]);
             }
-
-            nextEngine.enter(route, controller);
         }
 
         the[_prevController] = controller;

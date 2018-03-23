@@ -25,15 +25,13 @@ router
         next();
     })
     .match('/user/:userId', function (next) {
-        console.log('进入', this.path);
-        next();
+        console.log('模拟请求用户数据');
+        setTimeout(function () {
+            next();
+        }, 100);
     })
     .get('/user/:userId', function (resolve) {
-        require.async('./pages/page1.js', function (exports) {
-            setTimeout(function () {
-                resolve(exports);
-            }, 1000);
-        });
+        require.async('./pages/page1.js', resolve);
     })
     .get('/page2', function (resolve) {
         require.async('./pages/page2.js', function (exports) {
@@ -58,13 +56,6 @@ router
             view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1></div>');
             view.style(style);
         };
-        exports.update = function (view, route) {
-            console.log('<page4>', '[update]', route);
-            view.html('<div class="page page-4"><h1>page 4 query.x=' + route.query.x + '</h1></div>');
-        };
-        exports.hide = function (view, route) {
-            console.log('<page4>', '[leave]', route);
-        };
 
         return exports;
     })
@@ -79,7 +70,7 @@ var transformOptions = {
 var app = window.app = new Application(router, {
     el: '#app',
     platform: 'mobile',
-    showAnimation: function (el, options, next) {
+    showAnimation2: function (el, options, next) {
         var next2 = function () {
             // 把 transform 从 dom 中删除，否则会影响 zIndex
             // <div1 style="transform: ...."><div2 style="z-index: 10000"></div2></div1>
@@ -129,7 +120,7 @@ var app = window.app = new Application(router, {
                 break;
         }
     },
-    hideAnimation: function (el, options, done) {
+    hideAnimation2: function (el, options, done) {
         switch (options.direction) {
             case 'forward':
                 attribute.style(el, {
@@ -164,13 +155,13 @@ var app = window.app = new Application(router, {
     }
 });
 
-router
-    .on('beforeChange', function (route) {
-        loading.open();
-    })
-    .on('afterChange', function (route) {
-        loading.close();
-    });
+// router
+//     .on('beforeChange', function (route) {
+//         loading.open();
+//     })
+//     .on('afterChange', function (route) {
+//         loading.close();
+//     });
 
 
 document.getElementById('link404').onclick = function () {

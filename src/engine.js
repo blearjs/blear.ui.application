@@ -57,6 +57,7 @@ var Viewer = Class.extend({
 
         modification.insert(the[_styleEl], the.viewsEl);
         modification.insert(the[_viewEl], the.viewsEl);
+        the[_view].visible = true;
 
         if (!the[_installed]) {
             the[_installed] = true;
@@ -87,6 +88,7 @@ var Viewer = Class.extend({
         var options = {
             direction: route.direction
         };
+        the[_view].visible = false;
         the[_exec](ctrl.hide, the[_route], route);
         the[_scrollTop] = layout.scrollTop(the[_viewEl]);
         the[_hideAnimation](the[_viewEl], options, function () {

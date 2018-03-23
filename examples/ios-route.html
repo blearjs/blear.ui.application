@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1.0,minimum-scale=1.0,minimal-ui">
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        body {
+            word-wrap: break-word;
+            word-break: break-all;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            -moz-hyphens: auto;
+            hyphens: auto;
+        }
+
+        html, body, #app, .view {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        #app, .view {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #app img {
+            width: 100%;
+        }
+
+        #box {
+            position: fixed;
+            font-size: 40px;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+<ul id="box">
+    <li><a href="#abc">#abc</a></li>
+    <li><a href="#def">#def</a></li>
+</ul>
+
+
+<div id="app"></div>
+
+
+<script>
+    (function () {
+        var map = {};
+        var lastHref = null;
+        var appEl = document.getElementById('app');
+        var hashChange = function () {
+            // 这里模拟：在路由变化之后，进行了一些必要的异步操作，
+            // 之后才能判断是否可以进行页面渲染
+            // 如果不能渲染，则跳转到提示页面
+            setTimeout(function () {
+
+            }, 100);
+
+            var oldView = buildView(lastHref);
+            var newView = buildView(lastHref = location.href);
+
+            if (oldView) {
+                appEl.removeChild(oldView);
+            }
+
+            appEl.appendChild(newView);
+        };
+
+        hashChange();
+        window.addEventListener('popstate', hashChange);
+
+        function buildView(href) {
+            if (!href) {
+                return null;
+            }
+
+            var view = map[href];
+
+            if (view) {
+                return view;
+            }
+
+            var divEl = document.createElement('div');
+            divEl.className = 'view';
+            divEl.innerHTML = '<p>' + href + '</p>';
+            return map[href] = divEl;
+        }
+    }());
+</script>
+</body>
+</html>
