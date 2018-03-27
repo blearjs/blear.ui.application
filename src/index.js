@@ -120,12 +120,12 @@ prop[_initEvent] = function () {
         }
         // 不同控制器
         else {
-            nextEngine.enter(route, controller);
-
             // 旧页面
             if (prevEngine) {
                 prevEngine.leave(route, the[_prevController]);
             }
+
+            nextEngine.enter(route, controller);
         }
 
         the[_prevController] = controller;
