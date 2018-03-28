@@ -1,0 +1,40 @@
+<!doctype html>
+<!--
+ - 文件描述
+ - @author ydr.me
+ - @create 2018-03-27 09:49
+ - @update 2018-03-27 09:49
+ -->
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1.0,minimum-scale=1.0,minimal-ui">
+    <title>svg.html</title>
+</head>
+<body ontouchstart="">
+
+
+<p>下面这张图片是 SVG，通过切换显隐查看是否闪动！</p>
+<button id="btn">切换 SVG 的显隐</button>
+
+<div id="svg">
+<div
+     style="width:100px;height:100px;
+     background:url(http://192.168.12.112:5150/static/img/svg/home/invite.svg);"></div>
+</div>
+
+<script>
+    (function () {
+        var display = true;
+
+        document.getElementById('btn').onclick = function () {
+            document.getElementById('svg').style.display = display ? 'none' : 'block';
+            display = !display;
+        };
+    }());
+</script>
+
+</body>
+</html>

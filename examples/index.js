@@ -155,13 +155,13 @@ var app = window.app = new Application(router, {
     }
 });
 
-// router
-//     .on('beforeChange', function (route) {
-//         loading.open();
-//     })
-//     .on('afterChange', function (route) {
-//         loading.close();
-//     });
+router
+    .on('beforeLoad', function (route) {
+        loading.open();
+    })
+    .on('afterLoad', function (route) {
+        loading.close();
+    });
 
 
 document.getElementById('link404').onclick = function () {
