@@ -33,6 +33,9 @@ router
     .get('/user/:userId', function (resolve) {
         require.async('./pages/page1.js', resolve);
     })
+    .get('/page1', function (resolve) {
+        require.async('./pages/page1.js', resolve);
+    })
     .get('/page2', function (resolve) {
         require.async('./pages/page2.js', function (exports) {
             setTimeout(function () {
@@ -167,17 +170,20 @@ router
 document.getElementById('link404').onclick = function () {
     router.redirect('/404/' + random.string());
 };
-document.getElementById('linkPage1').onclick = function () {
+document.getElementById('linkUser').onclick = function () {
     router.redirect('/user/' + random.number(1, 100) + '/?a=1');
 };
+document.getElementById('linkPage1').onclick = function () {
+    router.redirect('/page1?a=' + random.number(1, 100));
+};
 document.getElementById('linkPage2').onclick = function () {
-    router.redirect('/page2?r=' + random.number(1, 100));
+    router.redirect('/page2?b=' + random.number(1, 100));
 };
 document.getElementById('linkPage3').onclick = function () {
-    router.redirect('/page3/?s=' + random.number(1, 100));
+    router.redirect('/page3/?c=' + random.number(1, 100));
 };
 document.getElementById('linkPage4').onclick = function () {
-    router.redirect('/page4/?x=' + random.number(1, 100));
+    router.redirect('/page4/?d=' + random.number(1, 100));
 };
 
 router.start();
