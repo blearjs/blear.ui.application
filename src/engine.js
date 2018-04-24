@@ -17,15 +17,15 @@ var fun = require('blear.utils.function');
 var View = require('./view');
 
 var namespace = 'blearui-application-view';
-var viewId = 0;
-var Viewer = Class.extend({
-    className: 'Viewer',
+var engineId = 0;
+var Engine = Class.extend({
+    className: 'Engine',
     constructor: function (viewsEl, platform, showAnimation, hideAnimation) {
         var the = this;
 
-        Viewer.parent(the);
+        Engine.parent(the);
         the.viewsEl = viewsEl;
-        var id = namespace + '-' + viewId++;
+        var id = namespace + '-' + engineId++;
         var styleEl = the[_styleEl] = modification.create('style', {
             class: namespace,
             id: id + '-style'
@@ -52,7 +52,7 @@ var Viewer = Class.extend({
         var the = this;
         var options = {
             // 首个 view 进入，则方向为空
-            direction: viewId === 1 ? 'none' : route.direction
+            direction: engineId === 1 ? 'none' : route.direction
         };
 
         modification.insert(the[_styleEl], the.viewsEl);
@@ -109,8 +109,8 @@ var Viewer = Class.extend({
         the[_exec](ctrl.update, route);
     }
 });
-var prop = Viewer.prototype;
-var sole = Viewer.sole;
+var prop = Engine.prototype;
+var sole = Engine.sole;
 var _view = sole();
 var _showAnimation = sole();
 var _hideAnimation = sole();
@@ -122,7 +122,7 @@ var _viewEl = sole();
 var _styleEl = sole();
 var _route = sole();
 
-module.exports = Viewer;
+module.exports = Engine;
 
 prop[_exec] = function (callback, route, nextRoute) {
     fun.ensure(callback).call(window, this[_view], route, nextRoute);
