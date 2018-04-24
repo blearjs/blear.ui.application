@@ -13,6 +13,7 @@ var UI = require('blear.ui');
 var attribute = require('blear.core.attribute');
 var selector = require('blear.core.selector');
 var object = require('blear.utils.object');
+var fun = require('blear.utils.function');
 
 var Engine = require('./engine');
 
@@ -104,6 +105,9 @@ prop[_initNode] = function () {
 
 prop[_initEvent] = function () {
     var the = this;
+    var afterChange = fun.bind(function () {
+
+    }, the);
 
     // the[_router].on('beforeChange', function (route) {
     //
@@ -117,15 +121,27 @@ prop[_initEvent] = function () {
         // 同一个控制器：页面刷新进入
         if (the[_prevController] === controller) {
             nextEngine.reload(route, controller);
+            the.emit('routeChange', route);
         }
         // 不同控制器
         else {
             // 旧页面
             if (prevEngine) {
-                prevEngine.leave(route, the[_prevController]);
+                var prevView = prevEngine.view;
+                var prevRoute = prevEngine.route;
+                the.emit('beforeHide', prevView, prevRoute);
+                prevEngine.leave(route, the[_prevController], function () {
+                    the.emit('afterHide', prevView, prevRoute);
+                });
             }
 
-            nextEngine.enter(route, controller);
+            var nextView = nextEngine.view;
+            var nextRoute = route;
+            the.emit('beforeShow', nextView, nextRoute);
+            nextEngine.enter(route, controller, function () {
+                the.emit('afterShow', nextView, nextRoute);
+            });
+            the.emit('routeChange', route);
         }
 
         the[_prevController] = controller;

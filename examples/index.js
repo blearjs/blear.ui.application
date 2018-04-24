@@ -166,6 +166,22 @@ router
         loading.close();
     });
 
+app.on('beforeHide', function (view, route) {
+    console.log('beforeHide', view, route)
+});
+
+app.on('afterHide', function (view, route) {
+    console.log('afterHide', view, route)
+});
+
+app.on('beforeShow', function (view, route) {
+    console.log('beforeShow', view, route)
+});
+
+app.on('afterShow', function (view, route) {
+    console.log('afterShow', view, route)
+});
+
 
 document.getElementById('link404').onclick = function () {
     router.redirect('/404/' + random.string());
