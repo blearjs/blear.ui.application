@@ -69,7 +69,7 @@ var Engine = Class.extend({
         the[_exec](ctrl.show, route);
         the[_exec](ctrl.update, route);
         the[_showAnimation](the[_viewEl], options, function () {
-            if (options.direction !== 'backward') {
+            if (options.direction !== 'back') {
                 the[_scrollTop] = 0;
             }
 
