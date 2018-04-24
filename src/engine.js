@@ -97,6 +97,7 @@ var Engine = Class.extend({
         the[_hideAnimation](the[_viewEl], options, function () {
             modification.remove(the[_styleEl]);
             modification.remove(the[_viewEl]);
+            callback();
         });
     },
 
@@ -104,14 +105,12 @@ var Engine = Class.extend({
      * 引擎重启
      * @param route
      * @param ctrl
-     * @param callback
      */
-    reload: function (route, ctrl, callback) {
+    reload: function (route, ctrl) {
         var the = this;
 
         the[_route] = route;
         the[_exec](ctrl.update, route);
-        callback();
     }
 });
 var prop = Engine.prototype;
@@ -129,6 +128,7 @@ var _route = sole();
 module.exports = Engine;
 
 prop[_exec] = function (callback, route, nextRoute) {
+    this.route = route;
     fun.ensure(callback).call(window, this.view, route, nextRoute);
 };
 
