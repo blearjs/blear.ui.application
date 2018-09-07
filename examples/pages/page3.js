@@ -4,7 +4,7 @@ define(function (require, exports, module) {
         view.style(style);
     };
     exports.update = function (view, route) {
-        view.html('<div class="page page-3"><h1>page3 query.s=' + route.query.s + '</h1></div>');
+        view.html('<div class="page page-3"><h1>page3 query.c=' + route.query.c + '</h1></div>');
     };
     exports.hide = function (view, route) {
         console.log('<page3>', '[leave]', route);
