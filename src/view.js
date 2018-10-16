@@ -27,6 +27,7 @@ var View = Class.extend({
         the.viewsEl = viewsEl;
         the.id = id;
         the.el = the.viewEl = viewEl;
+        the.elId = the.el.id;
         the.styleEl = styleEl;
     },
     /**
