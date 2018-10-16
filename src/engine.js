@@ -13,6 +13,9 @@ var Class = require('blear.classes.class');
 var modification = require('blear.core.modification');
 var layout = require('blear.core.layout');
 var fun = require('blear.utils.function');
+var event = require('blear.core.event');
+var attribute = require('blear.core.attribute');
+var selector = require('blear.core.selector');
 
 var View = require('./view');
 
@@ -63,6 +66,19 @@ var Engine = Class.extend({
         if (!the[_installed]) {
             the[_installed] = true;
             the[_exec](ctrl.install, route);
+
+            // MVVM 会将根节点进行替换，需要重新查找
+            var viewEl = the[_viewEl] = the.view.el = selector.query('#' + the.view.elId)[0];
+
+            // 监听 a[redirect]、a[rewrite]
+            event.on(viewEl, 'click', 'a[redirect]', function (ev) {
+                route.redirect(attribute.attr(this, 'redirect'));
+                ev.preventDefault();
+            });
+            event.on(viewEl, 'click', 'a[rewrite]', function (ev) {
+                route.redirect(attribute.attr(this, 'rewrite'));
+                ev.preventDefault();
+            });
         }
 
         the[_route] = route;
