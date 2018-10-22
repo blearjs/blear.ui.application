@@ -1,8 +1,7 @@
 .blearui-application-fullpage, .blearui-application-views, .blearui-application-view {
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  background: #fff; }
+  overflow: hidden; }
 
 .blearui-application-views, .blearui-application-view {
   position: absolute;
