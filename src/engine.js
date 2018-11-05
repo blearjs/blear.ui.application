@@ -29,16 +29,18 @@ var Engine = Class.extend({
         Engine.parent(the);
         the.viewsEl = viewsEl;
         var id = namespace + '-' + engineId++;
-        var styleEl = the[_styleEl] = modification.create('style', {
+        var styleEl = modification.create('style', {
             class: namespace,
             id: id + '-style'
         });
-        var viewEl = the[_viewEl] = modification.create('div', {
+        var viewEl = modification.create('div', {
             class: namespace,
             id: id + '-div'
         });
 
         the.view = new View(id, viewsEl, viewEl, styleEl);
+        the.view.styleEl = styleEl;
+        the.view.el = the.view.viewEl = viewEl;
         the[_scrollTop] = 0;
         the[_platform] = platform;
         the[_showAnimation] = showAnimation;
@@ -59,8 +61,8 @@ var Engine = Class.extend({
             direction: engineId === 1 ? 'none' : route.direction
         };
 
-        modification.insert(the[_styleEl], the.viewsEl);
-        modification.insert(the[_viewEl], the.viewsEl);
+        modification.insert(the.view.styleEl, the.viewsEl);
+        modification.insert(the.view.el, the.viewsEl);
         the.view.visible = true;
 
         if (!the[_installed]) {
@@ -68,7 +70,7 @@ var Engine = Class.extend({
             the[_exec](ctrl.install, route);
 
             // MVVM 会将根节点进行替换，需要重新查找
-            var viewEl = the[_viewEl] = the.view.el = selector.query('#' + the.view.elId)[0];
+            var viewEl = the.view.el = the.view.viewEl = selector.query('#' + the.view.elId)[0];
 
             // 监听 a[redirect]、a[rewrite]
             event.on(viewEl, 'click', 'a[redirect]', function (ev) {
@@ -85,12 +87,12 @@ var Engine = Class.extend({
         the.view.title(ctrl.title);
         the[_exec](ctrl.show, route);
         the[_exec](ctrl.update, route);
-        the[_showAnimation](the[_viewEl], options, function () {
+        the[_showAnimation](the.view.el, options, function () {
             if (options.direction !== 'back') {
                 the[_scrollTop] = 0;
             }
 
-            layout.scrollTop(the[_viewEl], the[_scrollTop]);
+            layout.scrollTop(the.view.el, the[_scrollTop]);
             callback();
         });
     },
@@ -109,10 +111,10 @@ var Engine = Class.extend({
         };
         the.view.visible = false;
         the[_exec](ctrl.hide, the[_route], route);
-        the[_scrollTop] = layout.scrollTop(the[_viewEl]);
-        the[_hideAnimation](the[_viewEl], options, function () {
-            modification.remove(the[_styleEl]);
-            modification.remove(the[_viewEl]);
+        the[_scrollTop] = layout.scrollTop(the.view.el);
+        the[_hideAnimation](the.view.el, options, function () {
+            modification.remove(the.view.styleEl);
+            modification.remove(the.view.el);
             callback();
         });
     },
@@ -137,8 +139,6 @@ var _installed = sole();
 var _exec = sole();
 var _platform = sole();
 var _scrollTop = sole();
-var _viewEl = sole();
-var _styleEl = sole();
 var _route = sole();
 
 module.exports = Engine;
