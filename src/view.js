@@ -30,6 +30,7 @@ var View = Class.extend({
         the.elId = the.el.id;
         the.styleEl = styleEl;
     },
+
     /**
      * 注入结构
      * @param html
