@@ -68,10 +68,11 @@ var View = Class.extend({
 
         // 待修改的标题等于当前标题，则不作为
         if (title === doc.title) {
+            the[_title] = doc.title;
             return the;
         }
 
-        doc.title = title || docTitle;
+        the[_title] = doc.title = title || docTitle;
 
         if (!isIOS) {
             return the;
@@ -90,9 +91,20 @@ var View = Class.extend({
         };
         modification.insert(faviconIframe);
         return the;
+    },
+
+    /**
+     * 获取当前视图标题
+     * @returns {*}
+     */
+    getTitle: function () {
+        return this[_title];
     }
 });
 
+
+var sole = View.sole;
+var _title = sole();
 
 module.exports = View;
 

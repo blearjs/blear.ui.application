@@ -14,9 +14,11 @@ var attribute = require('blear.core.attribute');
 var selector = require('blear.core.selector');
 var object = require('blear.utils.object');
 var fun = require('blear.utils.function');
+var time = require('blear.utils.time');
 
 var Engine = require('./engine');
 
+var nextTick = time.nextTick;
 var namespace = 'blearui-application';
 var defaults = {
     /**
@@ -124,6 +126,7 @@ prop[_initEvent] = function () {
         if (the[_prevController] === controller) {
             prevView = prevEngine.view;
             prevRoute = prevEngine.route;
+
             the.emit('beforeShow', prevView, prevRoute);
             nextEngine.reload(route, controller);
             the.emit('afterShow', prevView, prevRoute);
