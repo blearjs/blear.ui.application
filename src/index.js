@@ -117,17 +117,23 @@ prop[_initEvent] = function () {
         var controller = route.controller;
         var nextEngine = the[_getEngine](controller);
         var prevEngine = the[_getEngine](the[_prevController]);
+        var prevView;
+        var prevRoute;
 
-        // 同一个控制器：页面刷新进入
+        // 同一个控制器：视图更新
         if (the[_prevController] === controller) {
+            prevView = prevEngine.view;
+            prevRoute = prevEngine.route;
+            the.emit('beforeShow', prevView, prevRoute);
             nextEngine.reload(route, controller);
+            the.emit('afterShow', prevView, prevRoute);
         }
         // 不同控制器
         else {
             // 旧页面
             if (prevEngine) {
-                var prevView = prevEngine.view;
-                var prevRoute = prevEngine.route;
+                prevView = prevEngine.view;
+                prevRoute = prevEngine.route;
                 the.emit('beforeHide', prevView, prevRoute);
                 prevEngine.leave(route, the[_prevController], function () {
                     the.emit('afterHide', prevView, prevRoute);
