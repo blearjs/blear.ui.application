@@ -95,7 +95,7 @@ var View = Class.extend({
 
     /**
      * 获取当前视图标题
-     * @returns {*}
+     * @returns {string}
      */
     getTitle: function () {
         return this[_title];
