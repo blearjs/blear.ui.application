@@ -27,9 +27,9 @@ var defaults = {
     el: null,
 
     /**
-     * 平台，可选：mobile/desktop
+     * 容器元素，用来恢复滚动条位置，默认是文档
      */
-    platform: 'mobile',
+    containerEl: document,
 
     /**
      * 显示动画，可以根据参数来实现过场动画
@@ -82,6 +82,7 @@ var sole = Application.sole;
 var _router = sole();
 var _options = sole();
 var _viewsEl = sole();
+var _containerEl = sole();
 var _initNode = sole();
 var _initEvent = sole();
 var _getEngine = sole();
@@ -95,14 +96,8 @@ prop[_initNode] = function () {
     var options = the[_options];
 
     the[_viewsEl] = selector.query(options.el)[0];
+    the[_containerEl] = selector.query(options.containerEl)[0];
     attribute.addClass(the[_viewsEl], namespace + '-views');
-
-    if (options.platform === 'mobile') {
-        var fullpageClassName = namespace + '-fullpage';
-        attribute.addClass(document.documentElement, fullpageClassName);
-        attribute.addClass(document.body, fullpageClassName);
-        require('./style.css', 'css|style');
-    }
 };
 
 prop[_initEvent] = function () {
@@ -166,7 +161,12 @@ prop[_getEngine] = function (controller) {
     var options = the[_options];
 
     return the[_engineMap][controllerId] ||
-        (the[_engineMap][controllerId] = new Engine(the[_viewsEl], options.platform, options.showAnimation, options.hideAnimation));
+        (the[_engineMap][controllerId] = new Engine(
+            the[_viewsEl],
+            the[_containerEl],
+            options.showAnimation,
+            options.hideAnimation
+        ));
 };
 
 

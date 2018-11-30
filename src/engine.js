@@ -23,7 +23,7 @@ var namespace = 'blearui-application-view';
 var engineId = 0;
 var Engine = Class.extend({
     className: 'Engine',
-    constructor: function (viewsEl, platform, showAnimation, hideAnimation) {
+    constructor: function (viewsEl, containerEl, showAnimation, hideAnimation) {
         var the = this;
 
         Engine.parent(the);
@@ -42,7 +42,7 @@ var Engine = Class.extend({
         the.view.styleEl = styleEl;
         the.view.el = the.view.viewEl = viewEl;
         the[_scrollTop] = 0;
-        the[_platform] = platform;
+        the[_containerEl] = containerEl;
         the[_showAnimation] = showAnimation;
         the[_hideAnimation] = hideAnimation;
         the[_installed] = false;
@@ -92,7 +92,7 @@ var Engine = Class.extend({
                 the[_scrollTop] = 0;
             }
 
-            layout.scrollTop(the.view.el, the[_scrollTop]);
+            layout.scrollTop(the[_containerEl], the[_scrollTop]);
             callback();
         });
     },
@@ -111,7 +111,7 @@ var Engine = Class.extend({
         };
         the.view.visible = false;
         the[_exec](ctrl.hide, the[_route], route);
-        the[_scrollTop] = layout.scrollTop(the.view.el);
+        the[_scrollTop] = layout.scrollTop(the[_containerEl]);
         the[_hideAnimation](the.view.el, options, function () {
             modification.remove(the.view.styleEl);
             modification.remove(the.view.el);
@@ -137,7 +137,7 @@ var _showAnimation = sole();
 var _hideAnimation = sole();
 var _installed = sole();
 var _exec = sole();
-var _platform = sole();
+var _containerEl = sole();
 var _scrollTop = sole();
 var _route = sole();
 
